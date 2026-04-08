@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Job List</h2>
+
+<form method="GET">
+    <input type="text" name="q" placeholder="Search job...">
+    <input type="text" name="location" placeholder="Location">
+
+    <select name="type">
+        <option value="">All</option>
+        <option value="fulltime">Full-time</option>
+        <option value="parttime">Part-time</option>
+        <option value="remote">Remote</option>
+    </select>
+
+    <button type="submit">Search</button>
+</form>
+
+<hr>
+
+{% for job in jobs %}
+    <div style="border:1px solid #ccc; padding:10px; margin:10px;">
+        <h3>{{ job.title }}</h3>
+        <p><b>Company:</b> {{ job.company.name }}</p>
+        <p><b>Location:</b> {{ job.location }}</p>
+        <p><b>Type:</b> {{ job.job_type }}</p>
+        <p><b>Salary:</b> {{ job.salary }}</p>
+    </div>
+{% empty %}
+    <p>No jobs found</p>
+{% endfor %}
+
+<!-- PAGINATION -->
+<div>
+    {% if jobs.has_previous %}
+        <a href="?page={{ jobs.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    <span>Page {{ jobs.number }} of {{ jobs.paginator.num_pages }}</span>
+
+    {% if jobs.has_next %}
+        <a href="?page={{ jobs.next_page_number }}">Next</a>
+    {% endif %}
+</div>
+</body>
+</html>

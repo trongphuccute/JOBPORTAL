@@ -1,16 +1,32 @@
 from django.db import models
-from accounts.models import User
+from django.conf import settings
+
+User = settings.AUTH_USER_MODEL
 
 class Company(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    description = models.TextField()
     location = models.CharField(max_length=255)
+    website = models.URLField(blank=True)
+
+    def __str__(self):
+        return self.name
+
 
 class Job(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    JOB_TYPE = (
+        ('fulltime', 'Full-time'),
+        ('parttime', 'Part-time'),
+        ('remote', 'Remote'),
+    )
+
     title = models.CharField(max_length=255)
     description = models.TextField()
-    salary = models.DecimalField(max_digits=10, decimal_places=2)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
     location = models.CharField(max_length=255)
+    job_type = models.CharField(max_length=20, choices=JOB_TYPE)
+    salary = models.IntegerField(null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
