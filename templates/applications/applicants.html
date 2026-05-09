@@ -1,0 +1,56 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+  <h3 class="mb-4">👥 Applicants for "{{ job.title }}"</h3>
+
+  {% for app in applications %}
+
+  <div class="card shadow-sm mb-3">
+    <div class="card-body d-flex justify-content-between align-items-center">
+
+      <!-- LEFT -->
+      <div>
+        <h5 class="mb-1">{{ app.user.username }}</h5>
+
+        <p class="mb-1 text-muted">
+          📄 CV:
+          <a href="{{ app.resume.file.url }}" target="_blank">
+            Download
+          </a>
+        </p>
+
+        {% if app.status == "pending" %}
+          <span class="badge bg-warning text-dark">Pending</span>
+        {% elif app.status == "accepted" %}
+          <span class="badge bg-success">Accepted</span>
+        {% else %}
+          <span class="badge bg-danger">Rejected</span>
+        {% endif %}
+      </div>
+
+      <!-- RIGHT -->
+      <div>
+        <a href="{% url 'applications:update_status' app.id 'accepted' %}"
+           class="btn btn-success btn-sm">
+          ✔ Accept
+        </a>
+
+        <a href="{% url 'applications:update_status' app.id 'rejected' %}"
+           class="btn btn-danger btn-sm">
+          ✖ Reject
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  {% empty %}
+    <p class="text-muted">No applicants yet</p>
+  {% endfor %}
+
+</div>
+
+{% endblock %}

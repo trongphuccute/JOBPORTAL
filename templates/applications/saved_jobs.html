@@ -1,0 +1,180 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- ================= SAVED HERO ================= -->
+
+<section class="saved-hero">
+
+    <div class="saved-overlay"></div>
+
+    <div class="container position-relative">
+
+        <div class="saved-hero-content">
+
+            <span class="saved-badge">
+                ⭐ Your Collection
+            </span>
+
+            <h1>
+                Saved
+                <span>Jobs</span>
+            </h1>
+
+            <p>
+                Manage your favorite opportunities and apply anytime.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ================= SAVED JOBS ================= -->
+
+<section class="saved-section">
+
+    <div class="container">
+
+        <!-- TOPBAR -->
+        <div class="saved-topbar">
+
+            <h3>
+                Your Saved Opportunities
+            </h3>
+
+            <span>
+                {{ saved_jobs.count }} Saved Jobs
+            </span>
+
+        </div>
+
+        <!-- GRID -->
+        <div class="row">
+
+            {% for item in saved_jobs %}
+
+            <div class="col-lg-4 col-md-6 mb-4">
+
+                <div class="saved-job-card">
+
+                    <!-- TOP -->
+                    <div class="saved-job-top">
+
+                        <div class="saved-company-icon">
+                            {{ item.job.company.name|slice:":1" }}
+                        </div>
+
+                        <div>
+
+                            <h5>
+                                {{ item.job.title }}
+                            </h5>
+
+                            <p>
+                                {{ item.job.company.name }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <!-- INFO -->
+                    <div class="saved-job-info">
+
+                        <div>
+                            📍 {{ item.job.location }}
+                        </div>
+
+                        <div>
+                            💼 {{ item.job.get_job_type_display }}
+                        </div>
+
+                        <div>
+                            💰 {{ item.job.get_salary_display }}
+                        </div>
+
+                    </div>
+
+                    <!-- TAGS -->
+                    <div class="saved-tags">
+
+                        {% if item.job.job_type == 'remote' %}
+                        <span>
+                            Remote
+                        </span>
+                        {% endif %}
+
+                        <span>
+                            Featured
+                        </span>
+
+                        <span>
+                            Hiring
+                        </span>
+
+                    </div>
+
+                    <!-- FOOTER -->
+                    <div class="saved-footer">
+
+                        <a
+                            href="{% url 'jobs:job_detail' item.job.id %}"
+                            class="view-btn"
+                        >
+                            View Job
+                        </a>
+
+                        <a
+                            href="{% url 'applications:save_job' item.job.id %}"
+                            class="remove-btn"
+                        >
+                            Remove
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <div class="col-12">
+
+                <div class="empty-saved">
+
+                    <div class="empty-icon">
+                        ⭐
+                    </div>
+
+                    <h3>
+                        No Saved Jobs Yet
+                    </h3>
+
+                    <p>
+                        Save jobs you like and access them later.
+                    </p>
+
+                    <a
+                        href="{% url 'jobs:job_list' %}"
+                        class="browse-btn"
+                    >
+                        Browse Jobs
+                    </a>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

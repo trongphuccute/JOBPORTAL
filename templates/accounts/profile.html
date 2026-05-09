@@ -1,0 +1,157 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="profile-page">
+
+    <div class="container py-5">
+
+        <div class="profile-wrapper">
+
+            <!-- LEFT -->
+            <div class="profile-sidebar">
+
+                <div class="avatar-box">
+
+                    {% if user.avatar %}
+                    <img
+                        src="{{ user.avatar.url }}"
+                        class="avatar-image"    
+                    >
+                    {% else %}  
+                    <img 
+                        src="{% static 'img/default.jpg' %}"
+                        class="avatar-image"    
+                    >
+                    {% endif %}
+                    <h3>
+                        {{ user.username }}
+                    </h3>
+
+                    <p>
+                        {{ user.get_role_display }}
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT -->
+            <div class="profile-content">
+
+                <div class="profile-card">
+
+                    <div class="profile-header">
+
+                        <h2>
+                            Edit Profile
+                        </h2>
+
+                        <p>
+                            Update your account information
+                        </p>
+
+                    </div>
+
+                    <form method="POST" enctype="multipart/form-data">
+
+                        {% csrf_token %}
+
+                        <div class="row">
+
+                            <div class="col-md-6">
+
+                                <div class="input-group-modern">
+
+                                    <label>
+                                        Username
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        name="username"
+                                        value="{{ user.username }}"
+                                    >
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <div class="input-group-modern">
+
+                                    <label>
+                                        Full Name
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        name="full_name"
+                                        value="{{ profile.full_name }}"
+                                    >
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="input-group-modern">
+
+                            <label>
+                                Phone
+                            </label>
+
+                            <input
+                                type="text"
+                                name="phone"
+                                value="{{ profile.phone }}"
+                            >
+
+                        </div>
+
+                        <div class="input-group-modern">
+
+                            <label>
+                                Address
+                            </label>
+
+                            <textarea
+                                name="address"
+                                rows="4"
+                            >{{ profile.address }}</textarea>
+
+                        </div>
+
+                        <div class="input-group-modern">
+
+                            <label>
+                                Avatar
+                            </label>
+
+                            <input
+                                type="file"
+                                name="avatar"
+                            >
+
+                        </div>
+
+                        <button class="save-profile-btn">
+                            Save Changes
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

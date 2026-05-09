@@ -1,0 +1,233 @@
+{% extends 'base/base.html' %}
+{% block content %}
+
+<section class="job-detail-page">
+
+<div class="container">
+
+    <!-- HERO -->
+    <div class="job-hero-card">
+
+        <h1 class="job-detail-title">
+            {{ job.title }}
+        </h1>
+
+        <a href="{% url 'jobs:company_profile' job.company.id %}"
+           class="job-company-link">
+
+            {{ job.company.name }}  
+            <span class="company-badge">
+                🏢
+            </span>
+        </a>
+
+        <div class="job-meta-row">
+
+            <div class="job-meta-box">
+                📍 {{ job.location }}
+            </div>
+
+            <div class="job-meta-box">
+                💰 {{ job.get_salary_display }}
+            </div>
+
+            <div class="job-meta-box">
+                ⏰ {{ job.get_job_type_display }}
+            </div>
+
+            <div class="job-meta-box">
+                🕒 {{ job.created_at|date:"d/m/Y" }}
+            </div>
+
+        </div>
+
+        <div class="job-action-group">
+
+            {% if user.is_authenticated %}
+
+                {% if user.role == 'job_seeker' %}
+
+                    <a href="{% url 'applications:apply_job' job.id %}"
+                       class="job-apply-btn">
+
+                        Apply Now
+
+                    </a>
+
+                    <a href="{% url 'applications:save_job' job.id %}"
+                       class="job-save-btn">
+
+                        {% if is_saved %}
+                            Saved ✓
+                        {% else %}
+                            Save Job
+                        {% endif %}
+
+                    </a>
+
+                {% endif %}
+
+            {% else %}
+
+                <a href="{% url 'login' %}"
+                   class="job-apply-btn">
+
+                    Login To Apply
+
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <!-- LEFT -->
+        <div class="col-lg-8">
+
+            <!-- IMAGE -->
+            {% if job.image %}
+
+            <div class="detail-card job-gallery">
+
+                <img src="{{ job.image.url }}">
+
+            </div>
+
+            {% endif %}
+
+            <!-- DESCRIPTION -->
+            <div class="detail-card">
+
+                <h4>
+                    Job Description
+                </h4>
+
+                <p>
+                    {{ job.description|linebreaks }}
+                </p>
+
+            </div>
+
+            <!-- REQUIREMENTS -->
+            <div class="detail-card">
+
+                <h4>
+                    Requirements
+                </h4>
+
+                {% if job.requirements %}
+
+                    <p>
+                        {{ job.requirements|linebreaks }}
+                    </p>
+
+                {% else %}
+
+                    <p>No requirements provided</p>
+
+                {% endif %}
+
+            </div>
+
+            <!-- ABOUT -->
+            <div class="detail-card">
+
+                <h4>
+                    About Company
+                </h4>
+
+                {% if job.about_company %}
+
+                    <p>
+                        {{ job.about_company|linebreaks }}
+                    </p>
+
+                {% else %}
+
+                    <p>No company info</p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="col-lg-4">
+
+            <div class="job-sidebar">
+
+                <div class="overview-card">
+
+                    <h4 class="mb-4">
+                        Job Overview
+                    </h4>
+
+                    <div class="overview-item">
+                        <span>Location</span>
+                        <strong>{{ job.location }}</strong>
+                    </div>
+
+                    <div class="overview-item">
+                        <span>Salary</span>
+                        <strong>{{ job.get_salary_display }}</strong>
+                    </div>
+
+                    <div class="overview-item">
+                        <span>Type</span>
+                        <strong>{{ job.get_job_type_display }}</strong>
+                    </div>
+
+                    <div class="overview-item">
+                        <span>Posted</span>
+                        <strong>{{ job.created_at|date:"d/m/Y" }}</strong>
+                    </div>
+
+                </div>
+
+                <div class="overview-card">
+
+                    <h4 class="mb-4">
+                        Quick Apply
+                    </h4>
+
+                    {% if user.is_authenticated %}
+
+                        {% if user.role == 'job_seeker' %}
+
+                            <a href="{% url 'applications:apply_job' job.id %}"
+                               class="job-apply-btn d-block text-center">
+
+                                Apply Now
+
+                            </a>
+
+                        {% endif %}
+
+                    {% else %}
+
+                        <a href="{% url 'login' %}"
+                           class="job-apply-btn d-block text-center">
+
+                            Login To Apply
+
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+
+{% endblock %}

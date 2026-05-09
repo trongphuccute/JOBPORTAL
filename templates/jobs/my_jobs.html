@@ -1,0 +1,220 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/my_jobs.css' %}">
+
+<section class="myjobs-page">
+
+    <!-- BG -->
+    <div class="jobs-glow glow-left"></div>
+    <div class="jobs-glow glow-right"></div>
+
+    <div class="container py-5">
+
+        <!-- HEADER -->
+        <div class="myjobs-header">
+
+            <div>
+
+                <span class="page-badge">
+                    📊 Employer Dashboard
+                </span>
+
+                <h1>
+                    Manage Your
+                    <span>Job Posts</span>
+                </h1>
+
+                <p>
+                    Track, edit and manage all your posted jobs.
+                </p>
+
+            </div>
+
+            <a
+                href="{% url 'jobs:create_job' %}"
+                class="create-job-btn"
+            >
+                + Create Job
+            </a>
+
+        </div>
+
+        <!-- STATS -->
+        <div class="jobs-stats">
+
+            <div class="stats-card">
+
+                <h3>
+                    {{ jobs|length }}
+                </h3>
+
+                <p>
+                    Total Jobs
+                </p>
+
+            </div>
+
+            <div class="stats-card">
+
+                <h3>
+                    Active
+                </h3>
+
+                <p>
+                    Hiring Status
+                </p>
+
+            </div>
+
+            <div class="stats-card">
+
+                <h3>
+                    Employer
+                </h3>
+
+                <p>
+                    Dashboard
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- JOBS -->
+        {% if jobs %}
+
+        <div class="row g-4">
+
+            {% for job in jobs %}
+
+            <div class="col-lg-6">
+
+                <div class="modern-job-manage-card">
+
+                    <!-- TOP -->
+                    <div class="job-manage-top">
+
+                        <div class="job-icon">
+
+                            {{ job.company.name|slice:":1" }}
+
+                        </div>
+
+                        <div class="job-top-info">
+
+                            <h4>
+                                {{ job.title }}
+                            </h4>
+
+                            <p>
+                                {{ job.company.name }}
+                            </p>
+
+                        </div>
+
+                        <span class="status-live">
+                            Live
+                        </span>
+
+                    </div>
+
+                    <!-- INFO -->
+                    <div class="job-manage-info">
+
+                        <div class="info-box">
+                            📍 {{ job.location }}
+                        </div>
+
+                        <div class="info-box">
+                            💰 {{ job.get_salary_display }}
+                        </div>
+
+                        <div class="info-box">
+                            💼 {{ job.get_job_type_display }}
+                        </div>
+
+                        <div class="info-box">
+                            🕒 {{ job.created_at|date:"d M Y" }}
+                        </div>
+
+                    </div>
+
+                    <!-- DESCRIPTION -->
+                    <div class="job-description">
+
+                        {{ job.description|truncatechars:140 }}
+
+                    </div>
+
+                    <!-- ACTION -->
+                    <div class="job-actions">
+
+                        <a
+                            href="{% url 'jobs:job_detail' job.id %}"
+                            class="view-btn"
+                        >
+                            View
+                        </a>
+
+                        <a
+                            href="{% url 'jobs:edit_job' job.id %}"
+                            class="edit-btn"
+                        >
+                            Edit
+                        </a>
+
+                        <a
+                            href="{% url 'jobs:delete_job' job.id %}"
+                            class="delete-btn"
+                            onclick="return confirm('Bạn chắc chắn muốn xoá job này?');"
+                        >
+                            Delete
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <!-- EMPTY -->
+        <div class="empty-jobs-box">
+
+            <img
+                src="{% static 'img/empty-job.png' %}"
+                class="empty-img"
+            >
+
+            <h2>
+                No Jobs Posted Yet
+            </h2>
+
+            <p>
+                Start creating your first job post and hire amazing talents.
+            </p>
+
+            <a
+                href="{% url 'jobs:create_job' %}"
+                class="empty-create-btn"
+            >
+                Create Your First Job
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,284 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="create-job-page">
+
+    <!-- BG EFFECT -->
+    <div class="job-glow glow-left"></div>
+    <div class="job-glow glow-right"></div>
+
+    <div class="container py-5">
+
+        <!-- HEADER -->
+        <div class="create-job-header">
+
+            <span class="page-badge">
+                🚀 Employer Panel
+            </span>
+
+            <h1>
+                Create A New
+                <span>Job Post</span>
+            </h1>
+
+            <p>
+                Publish your opportunity and hire top talents faster.
+            </p>
+
+        </div>
+
+        <!-- FORM CARD -->
+        <div class="create-job-wrapper">
+
+            <form method="POST"
+                  enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                <div class="row g-5">
+
+                    <!-- LEFT -->
+                    <div class="col-lg-8">
+
+                        <!-- BASIC -->
+                        <div class="form-section">
+
+                            <h3>
+                                Basic Information
+                            </h3>
+
+                            <!-- TITLE -->
+                            <div class="modern-group">
+
+                                <label>
+                                    Job Title
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="title"
+                                    placeholder="Frontend Developer"
+                                    required
+                                >
+
+                            </div>
+
+                            <!-- DESCRIPTION -->
+                            <div class="modern-group">
+
+                                <label>
+                                    Job Description
+                                </label>
+
+                                <textarea
+                                    name="description"
+                                    rows="6"
+                                    placeholder="Describe job responsibilities..."
+                                    required
+                                ></textarea>
+
+                            </div>
+
+                            <!-- REQUIREMENTS -->
+                            <div class="modern-group">
+
+                                <label>
+                                    Requirements
+                                </label>
+
+                                <textarea
+                                    name="requirements"
+                                    rows="5"
+                                    placeholder="Required skills and experience..."
+                                ></textarea>
+
+                            </div>
+
+                            <!-- ABOUT -->
+                            <div class="modern-group">
+
+                                <label>
+                                    About Company
+                                </label>
+
+                                <textarea
+                                    name="about_company"
+                                    rows="5"
+                                    placeholder="Tell candidates about your company..."
+                                ></textarea>
+
+                            </div>
+
+                        </div>
+
+                        <!-- DETAILS -->
+                        <div class="form-section mt-4">
+
+                            <h3>
+                                Job Details
+                            </h3>
+
+                            <div class="row">
+
+                                <!-- LOCATION -->
+                                <div class="col-md-6">
+
+                                    <div class="modern-group">
+
+                                        <label>
+                                            Location
+                                        </label>
+
+                                        <input
+                                            type="text"
+                                            name="location"
+                                            placeholder="Hồ Chí Minh"
+                                            required
+                                        >
+
+                                    </div>
+
+                                </div>
+
+                                <!-- SALARY -->
+                                <div class="col-md-6">
+
+                                    <div class="modern-group">
+
+                                        <label>
+                                            Salary
+                                        </label>
+
+                                        <input
+                                            type="number"
+                                            name="salary"
+                                            placeholder="15000000"
+                                        >
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <!-- JOB TYPE -->
+                            <div class="modern-group">
+
+                                <label>
+                                    Job Type
+                                </label>
+
+                                <select name="job_type">
+
+                                    <option value="fulltime">
+                                        Full-time
+                                    </option>
+
+                                    <option value="parttime">
+                                        Part-time
+                                    </option>
+
+                                    <option value="remote">
+                                        Remote
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT -->
+                    <div class="col-lg-4">
+
+                        <!-- UPLOAD -->
+                        <div class="upload-card">
+
+                            <h4>
+                                Company Images
+                            </h4>
+
+                            <p>
+                                Upload office or company photos
+                            </p>
+
+                            <div class="upload-box">
+
+                                <img
+                                    src="{% static 'img/company.png' %}"
+                                    class="preview-image"
+                                >
+
+                                <input
+                                    type="file"
+                                    name="images"
+                                    multiple
+                                >
+
+                            </div>
+
+                            <small>
+                                PNG, JPG supported
+                            </small>
+
+                        </div>
+
+                        <!-- TIPS -->
+                        <div class="tips-card mt-4">
+
+                            <h5>
+                                💡 Tips
+                            </h5>
+
+                            <ul>
+
+                                <li>
+                                    Add detailed descriptions
+                                </li>
+
+                                <li>
+                                    Mention salary clearly
+                                </li>
+
+                                <li>
+                                    Upload real company images
+                                </li>
+
+                                <li>
+                                    Write attractive job titles
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- BUTTON -->
+                <div class="submit-area">
+
+                    <button
+                        type="submit"
+                        class="publish-btn"
+                    >
+                        Publish Job
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+{% endblock %}

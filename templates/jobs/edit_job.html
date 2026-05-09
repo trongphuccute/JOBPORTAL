@@ -1,0 +1,294 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/edit_job.css' %}">
+
+<section class="edit-job-page">
+
+    <!-- BG -->
+    <div class="edit-glow glow-left"></div>
+    <div class="edit-glow glow-right"></div>
+
+    <div class="container py-5">
+
+        <!-- HEADER -->
+        <div class="edit-header">
+
+            <span class="edit-badge">
+                ✏️ Employer Panel
+            </span>
+
+            <h1>
+                Edit Your
+                <span>Job Post</span>
+            </h1>
+
+            <p>
+                Update your job information and keep your hiring post fresh.
+            </p>
+
+        </div>
+
+        <!-- CARD -->
+        <div class="edit-job-card">
+
+            <form method="POST" enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                <div class="row g-5">
+
+                    <!-- LEFT -->
+                    <div class="col-lg-8">
+
+                        <!-- TITLE -->
+                        <div class="modern-input-group">
+
+                            <label>
+                                Job Title
+                            </label>
+
+                            <input
+                                type="text"
+                                name="title"
+                                value="{{ job.title }}"
+                                placeholder="Frontend Developer"
+                            >
+
+                        </div>
+
+                        <!-- DESCRIPTION -->
+                        <div class="modern-input-group">
+
+                            <label>
+                                Job Description
+                            </label>
+
+                            <textarea
+                                name="description"
+                                rows="6"
+                                placeholder="Describe the job..."
+                            >{{ job.description }}</textarea>
+
+                        </div>
+
+                        <!-- REQUIREMENTS -->
+                        <div class="modern-input-group">
+
+                            <label>
+                                Requirements
+                            </label>
+
+                            <textarea
+                                name="requirements"
+                                rows="5"
+                                placeholder="Required skills..."
+                            >{{ job.requirements }}</textarea>
+
+                        </div>
+
+                        <!-- ABOUT -->
+                        <div class="modern-input-group">
+
+                            <label>
+                                About Company
+                            </label>
+
+                            <textarea
+                                name="about_company"
+                                rows="5"
+                                placeholder="Describe your company..."
+                            >{{ job.about_company }}</textarea>
+
+                        </div>
+
+                        <!-- ROW -->
+                        <div class="row">
+
+                            <!-- LOCATION -->
+                            <div class="col-md-6">
+
+                                <div class="modern-input-group">
+
+                                    <label>
+                                        Location
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        name="location"
+                                        value="{{ job.location }}"
+                                        placeholder="Hồ Chí Minh"
+                                    >
+
+                                </div>
+
+                            </div>
+
+                            <!-- SALARY -->
+                            <div class="col-md-6">
+
+                                <div class="modern-input-group">
+
+                                    <label>
+                                        Salary
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        name="salary"
+                                        value="{{ job.salary }}"
+                                        placeholder="20000000"
+                                    >
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- TYPE -->
+                        <div class="modern-input-group">
+
+                            <label>
+                                Job Type
+                            </label>
+
+                            <select name="job_type">
+
+                                <option value="fulltime"
+                                    {% if job.job_type == 'fulltime' %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Full-time
+                                </option>
+
+                                <option value="parttime"
+                                    {% if job.job_type == 'parttime' %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Part-time
+                                </option>
+
+                                <option value="remote"
+                                    {% if job.job_type == 'remote' %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Remote
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT -->
+                    <div class="col-lg-4">
+
+                        <!-- UPLOAD -->
+                        <div class="upload-box">
+
+                            <h4>
+                                Upload Images
+                            </h4>
+
+                            <p>
+                                Add more company or office images
+                            </p>
+
+                            <input
+                                type="file"
+                                name="images"
+                                multiple
+                                class="upload-input"
+                            >
+
+                        </div>
+
+                        <!-- PREVIEW -->
+                        <div class="current-images-box">
+
+                            <div class="images-header">
+
+                                <h4>
+                                    Current Images
+                                </h4>
+
+                                <span>
+                                    {{ job.images.all|length }} Photos
+                                </span>
+
+                            </div>
+
+                            {% if job.images.all %}
+
+                            <div class="image-grid">
+
+                                {% for img in job.images.all %}
+
+                                <div class="image-item">
+
+                                    <img
+                                        src="{{ img.image.url }}"
+                                        alt=""
+                                    >
+
+                                </div>
+
+                                {% endfor %}
+
+                            </div>
+
+                            {% else %}
+
+                            <div class="empty-images">
+
+                                <p>
+                                    No images uploaded yet
+                                </p>
+
+                            </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- ACTION -->
+                <div class="edit-actions">
+
+                    <a
+                        href="{% url 'jobs:my_jobs' %}"
+                        class="cancel-btn"
+                    >
+                        Cancel
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="update-btn"
+                    >
+                        💾 Update Job
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+

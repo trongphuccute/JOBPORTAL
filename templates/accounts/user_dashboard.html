@@ -1,0 +1,302 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="dashboard-container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+        <div class="user-box">
+
+            {% if user.avatar %}
+            <img
+                src="{{ user.avatar.url }}"
+                class="profile-avatar"
+            >
+            {% else %}
+            <img
+                src="{% static 'img/default.jpg' %}"
+                class="profile-avatar"
+            >
+            {% endif %}
+
+            <h5>
+                {{ user.username }}
+            </h5>
+
+            <p>
+                Job Seeker Dashboard
+            </p>
+
+        </div>
+
+        <ul class="menu">
+
+            <li class="active" data-tab="overview">
+                 Overview
+            </li>
+
+            <li data-tab="applications">
+                📄 Applications
+            </li>
+
+            <li data-tab="saved">
+                💾 Saved Jobs
+            </li>
+
+            <li data-tab="settings">
+                ⚙️ Settings
+            </li>
+
+        </ul>
+
+    </div>
+
+    <!-- MAIN -->
+    <div class="main-content">
+
+        <!-- OVERVIEW -->
+        <div class="tab active" id="overview">
+
+            <div class="dashboard-title">
+
+                <h2>
+                    Welcome Back 👋
+                </h2>
+
+                <p>
+                    Track your applications and saved jobs easily.
+                </p>
+
+            </div>
+
+            <!-- STATS -->
+            <div class="stats">
+
+                <div class="card-box">
+
+                    <h4>
+                        {{ total_apply }}
+                    </h4>
+
+                    <p>
+                        Total Applied
+                    </p>
+
+                </div>
+
+                <div class="card-box">
+
+                    <h4>
+                        {{ total_saved }}
+                    </h4>
+
+                    <p>
+                        Saved Jobs
+                    </p>
+
+                </div>
+
+                <div class="card-box">
+
+                    <h4>
+                        {{ pending }}
+                    </h4>
+
+                    <p>
+                        Pending
+                    </p>
+
+                </div>
+
+                <div class="card-box">
+
+                    <h4>
+                        {{ accepted }}
+                    </h4>
+
+                    <p>
+                        Accepted
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- CHART -->
+            <div class="chart-box">
+
+                <canvas
+                    id="chart"
+                    data-labels='{{ chart_labels|default:"[]"|safe }}'
+                    data-data='{{ chart_data|default:"[]"|safe }}'
+                    data-info='{{ chart_info|default:"[]"|safe }}'
+                >
+                </canvas>
+
+            </div>
+
+        </div>
+
+        <!-- APPLICATIONS -->
+        <div class="tab" id="applications">
+
+            <div class="dashboard-title">
+
+                <h2>
+                    📄 Applications
+                </h2>
+
+                <p>
+                    Jobs you have applied for recently.
+                </p>
+
+            </div>
+
+            {% for app in applications %}
+
+            <div class="job-item">
+
+                <h5>
+                    {{ app.job.title }}
+                </h5>
+
+                <p>
+                    📍 {{ app.job.location }}
+                </p>
+
+                <span class="status
+                    {% if app.status == 'accepted' %}
+                        success
+                    {% elif app.status == 'rejected' %}
+                        danger
+                    {% else %}
+                        pending
+                    {% endif %}
+                ">
+
+                    {{ app.status }}
+
+                </span>
+
+            </div>
+
+            {% empty %}
+
+            <div class="settings-box">
+
+                <h4>
+                    No applications yet 😢
+                </h4>
+
+                <p class="text-muted">
+                    Start applying to jobs now.
+                </p>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        <!-- SAVED -->
+        <div class="tab" id="saved">
+
+            <div class="dashboard-title">
+
+                <h2>
+                    💾 Saved Jobs
+                </h2>
+
+                <p>
+                    Jobs you bookmarked for later.
+                </p>
+
+            </div>
+
+            {% for job in saved_jobs %}
+
+            <div class="job-item">
+
+                <h5>
+                    {{ job.job.title }}
+                </h5>
+
+                <p>
+                    📍 {{ job.job.location }}
+                </p>
+
+            </div>
+
+            {% empty %}
+
+            <div class="settings-box">
+
+                <h4>
+                    No saved jobs 😢
+                </h4>
+
+                <p class="text-muted">
+                    Save jobs to view later.
+                </p>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        <!-- SETTINGS -->
+        <div class="tab" id="settings">
+
+            <div class="dashboard-title">
+
+                <h2>
+                    ⚙️ Settings
+                </h2>
+
+                <p>
+                    Manage your account settings.
+                </p>
+
+            </div>
+
+            <div class="settings-box">
+
+                <h5 class="mb-3">
+                    Account
+                </h5>
+
+                <p>
+                    Username:
+                    <strong>{{ user.username }}</strong>
+                </p>
+
+                <p>
+                    Email:
+                    <strong>{{ user.email }}</strong>
+                </p>
+
+                <a
+                    href="{% url 'profile' %}"
+                    class="btn btn-dark rounded-pill px-4 mt-3"
+                >
+                    Update Profile
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- CHART -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="{% static 'js/main.js' %}"></script>
+
+{% endblock %}

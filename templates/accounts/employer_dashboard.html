@@ -1,0 +1,284 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/employer-dashboard.css' %}">
+
+<section class="employer-dashboard-page">
+
+    <!-- BG -->
+    <div class="dashboard-glow glow-one"></div>
+    <div class="dashboard-glow glow-two"></div>
+
+    <div class="container py-5 position-relative">
+
+        <!-- ================= HEADER ================= -->
+
+        <div class="dashboard-hero">
+
+            <div>
+
+                <span class="dashboard-badge">
+                     Employer Panel
+                </span>
+
+                <h1>
+                    Welcome Back,
+                    <span>{{ user.username }}</span>
+                </h1>
+
+                <p>
+                    Manage jobs, review applicants and grow your company.
+                </p>
+
+            </div>
+
+            <a
+                href="{% url 'jobs:create_job' %}"
+                class="post-job-btn"
+            >
+                + Post New Job
+            </a>
+
+        </div>
+
+        <!-- ================= STATS ================= -->
+
+        <div class="row g-4 mb-5">
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="modern-stat-card">
+
+                    <div class="stat-icon-box jobs-icon">
+                        💼
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            {{ total_jobs }}
+                        </h2>
+
+                        <p>
+                            Total Jobs
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="modern-stat-card">
+
+                    <div class="stat-icon-box app-icon">
+                        📄
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            {{ total_applications }}
+                        </h2>
+
+                        <p>
+                            Applications
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="modern-stat-card">
+
+                    <div class="stat-icon-box pending-icon">
+                        ⏳
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            {{ pending_count }}
+                        </h2>
+
+                        <p>
+                            Pending
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-3 col-md-6">
+
+                <div class="modern-stat-card">
+
+                    <div class="stat-icon-box accepted-icon">
+    
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            {{ accepted_count }}
+                        </h2>
+
+                        <p>
+                            Accepted
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ================= APPLICATIONS ================= -->
+
+        <div class="applications-wrapper">
+
+            <div class="applications-header">
+
+                <div>
+
+                    <h2>
+                        Recent Applicants
+                    </h2>
+
+                    <p>
+                        Review and manage candidate applications
+                    </p>
+
+                </div>
+
+                <span class="application-count">
+                    {{ total_applications }} Applicants
+                </span>
+
+            </div>
+
+            {% for app in applications %}
+
+            <div class="candidate-card">
+
+                <div class="candidate-left">
+
+                    <div class="candidate-avatar">
+                        {{ app.user.username|first|upper }}
+                    </div>
+
+                    <div>
+
+                        <h4>
+                            {{ app.user.username }}
+                        </h4>
+
+                        <p>
+                            Applied for
+                            <strong>
+                                {{ app.job.title }}
+                            </strong>
+                        </p>
+
+                        <small>
+                            {{ app.created_at|timesince }} ago
+                        </small>
+
+                    </div>
+
+                </div>
+
+                <div class="candidate-right">
+
+                    {% if app.status == 'pending' %}
+                    <span class="status-badge pending-status">
+                        Pending
+                    </span>
+                    {% endif %}
+
+                    {% if app.status == 'accepted' %}
+                    <span class="status-badge accepted-status">
+                        Accepted
+                    </span>
+                    {% endif %}
+
+                    {% if app.status == 'rejected' %}
+                    <span class="status-badge rejected-status">
+                        Rejected
+                    </span>
+                    {% endif %}
+
+                    <div class="candidate-actions">
+
+                        <a
+                            href="{{ app.resume.file.url }}"
+                            target="_blank"
+                            class="view-btn"
+                        >
+                            View CV
+                        </a>
+
+                        {% if app.status == 'pending' %}
+
+                        <a
+                            href="{% url 'applications:update_status' app.id 'accepted' %}"
+                            class="accept-btn"
+                        >
+                            Accept
+                        </a>
+
+                        <a
+                            href="{% url 'applications:update_status' app.id 'rejected' %}"
+                            class="reject-btn"
+                        >
+                            Reject
+                        </a>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <div class="empty-state-box">
+
+                <img
+                    src="https://cdn-icons-png.flaticon.com/512/4076/4076478.png"
+                    width="120"
+                >
+
+                <h3>
+                    No Applications Yet
+                </h3>
+
+                <p>
+                    Waiting for candidates to apply to your jobs.
+                </p>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

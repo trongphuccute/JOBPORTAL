@@ -1,0 +1,148 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="company-profile-page">
+
+    <div class="container py-5">
+
+        <!-- HERO -->
+
+        <div class="company-hero">
+
+            <div class="hero-left">
+
+                <div class="company-logo">
+
+                    {{ company.name|first }}
+
+                </div>
+
+                <div>
+
+                    <h1>
+                        {{ company.name }}
+                    </h1>
+
+                    <div class="company-meta">
+
+                        <span>
+                            📍 {{ company.location }}
+                        </span>
+
+                        {% if company.website %}
+                        <span>
+                            🌐
+                            <a
+                                href="{{ company.website }}"
+                                target="_blank"
+                            >
+                                Website
+                            </a>
+                        </span>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="hero-right">
+
+                <div class="job-count">
+
+                    {{ jobs.count }}
+
+                    <span>
+                        Jobs Posted
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ABOUT -->
+
+        <div class="company-about">
+
+            <h3>
+                About Company
+            </h3>
+
+            <p>
+                {{ company.description }}
+            </p>
+
+        </div>
+
+        <!-- JOBS -->
+
+        <div class="company-jobs">
+
+            <div class="section-title">
+
+                <h2>
+                    Open Positions
+                </h2>
+
+            </div>
+
+            <div class="row g-4">
+
+                {% for job in jobs %}
+
+                <div class="col-lg-4 col-md-6">
+
+                    <div class="company-job-card">
+
+                        <div class="job-top">
+
+                            <span class="job-type">
+                                {{ job.job_type }}
+                            </span>
+
+                        </div>
+
+                        <h4>
+                            {{ job.title }}
+                        </h4>
+
+                        <div class="job-info">
+
+                            <span>
+                                📍 {{ job.location }}
+                            </span>
+
+                            <span>
+                                💰 {{ job.salary }}
+                            </span>
+
+                        </div>
+
+                        <a
+                            href="{% url 'jobs:job_detail' job.id %}"
+                            class="view-job-btn"
+                        >
+                            View Job
+                        </a>
+
+                    </div>
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+{% endblock %}

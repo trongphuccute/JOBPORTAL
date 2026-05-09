@@ -1,21 +1,65 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>register</title>
-  </head>
-  <body>
-    <h2>Register</h2>
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
 
-    {% if messages %} {% for message in messages %}
-    <p style="color: green">{{ message }}</p>
-    {% endfor %} {% endif %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
 
-    <form method="POST">
-      {% csrf_token %} {{ form.as_p }}
+<body>
 
-      <button type="submit">Register</button>
-    </form>
-  </body>
+<div class="auth-wrapper">
+
+  <div class="auth-card">
+
+    <!-- LEFT -->
+    <div class="auth-left">
+      <h2>Join Us</h2>
+      <p>Tạo tài khoản để bắt đầu tìm việc mơ ước</p>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="auth-right">
+
+      <h3 class="auth-title">REGISTER</h3>
+
+      <form method="POST">
+        {% csrf_token %}
+
+        <!-- USERNAME -->
+        <div class="input-fancy">
+          <input type="text" name="username" placeholder="Username">
+        </div>
+
+        <!-- EMAIL -->
+        <div class="input-fancy">
+          <input type="email" name="email" placeholder="Email">
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="input-fancy">
+          <input type="password" name="password" placeholder="Password">
+        </div>
+
+        <!-- CONFIRM -->
+        <div class="input-fancy">
+          <input type="password" name="confirm_password" placeholder="Confirm Password">
+        </div>
+
+        <button class="btn-fancy">Register</button>
+      </form>
+
+      <div class="auth-link">
+        Đã có tài khoản? <a href="{% url 'login' %}">Đăng nhập</a>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+</body>
 </html>

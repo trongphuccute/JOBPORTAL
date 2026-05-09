@@ -1,0 +1,209 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<section class="application-page">
+
+    <!-- BACKGROUND -->
+    <div class="application-bg-circle circle-1"></div>
+    <div class="application-bg-circle circle-2"></div>
+
+    <div class="container py-5">
+
+        <!-- HEADER -->
+        <div class="application-header">
+
+            <div>
+
+                <span class="page-badge">
+                    🚀 Career Dashboard
+                </span>
+
+                <h1>
+                    My Applications
+                </h1>
+
+                <p>
+                    Theo dõi trạng thái ứng tuyển công việc của bạn.
+                </p>
+
+            </div>
+
+            <div class="header-stat">
+
+                <div class="stat-box">
+                    <h3>
+                        {{ applications|length }}
+                    </h3>
+                    <span>Applications</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        {% if applications %}
+
+        <!-- GRID -->
+        <div class="row g-4">
+
+            {% for app in applications %}
+
+            <div class="col-lg-4 col-md-6">
+
+                <div class="modern-application-card">
+
+                    <!-- TOP -->
+                    <div class="application-top">
+
+                        <div class="company-avatar">
+                            {{ app.job.company.name|slice:":1" }}
+                        </div>
+
+                        <div>
+
+                            <h4>
+                                {{ app.job.title }}
+                            </h4>
+
+                            <p>
+                                {{ app.job.company.name }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <!-- BODY -->
+                    <div class="application-body">
+
+                        <div class="info-row">
+                            <span>📍</span>
+                            <div>
+                                {{ app.job.location }}
+                            </div>
+                        </div>
+
+                        <div class="info-row">
+                            <span>💼</span>
+                            <div>
+                                {{ app.job.get_job_type_display }}
+                            </div>
+                        </div>
+
+                        <div class="info-row">
+                            <span>💰</span>
+                            <div>
+                                {{ app.job.get_salary_display }}
+                            </div>
+                        </div>
+
+                        <div class="info-row">
+                            <span>🕒</span>
+                            <div>
+                                {{ app.created_at|date:"d/m/Y" }}
+                            </div>
+                        </div>
+
+                        <!-- STATUS -->
+                        <div class="application-status">
+
+                            {% if app.status == 'pending' %}
+
+                            <span class="status-pill pending">
+                                ⏳ Pending Review
+                            </span>
+
+                            {% elif app.status == 'accepted' %}
+
+                            <span class="status-pill accepted">
+                                ✅ Accepted
+                            </span>
+
+                            {% elif app.status == 'rejected' %}
+
+                            <span class="status-pill rejected">
+                                ❌ Rejected
+                            </span>
+
+                            {% endif %}
+
+                        </div>
+
+                        <!-- PROGRESS -->
+                        <div class="application-progress">
+
+                            {% if app.status == 'pending' %}
+
+                            <div class="progress-bar-custom pending-bar"></div>
+
+                            {% elif app.status == 'accepted' %}
+
+                            <div class="progress-bar-custom accepted-bar"></div>
+
+                            {% elif app.status == 'rejected' %}
+
+                            <div class="progress-bar-custom rejected-bar"></div>
+
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                    <!-- FOOTER -->
+                    <div class="application-footer">
+
+                        <a
+                            href="{% url 'jobs:job_detail' app.job.id %}"
+                            class="view-btn"
+                        >
+                            View Details
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <!-- EMPTY -->
+        <div class="empty-state-box">
+
+            <img
+                src="{% static 'img/empty-job.png' %}"
+                alt=""
+            >
+
+            <h2>
+                No Applications Yet
+            </h2>
+
+            <p>
+                Start applying for jobs and track your career journey here.
+            </p>
+
+            <a
+                href="{% url 'jobs:job_list' %}"
+                class="explore-btn"
+            >
+                Explore Jobs
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+
+{% endblock %}

@@ -1,0 +1,204 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+<section class="employer-request-page">
+
+    <!-- BG EFFECT -->
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+
+    <div class="container py-5">
+
+        <div class="request-wrapper">
+
+            <!-- LEFT -->
+            <div class="request-left">
+
+                <span class="request-badge">
+                    🚀 Employer Access
+                </span>
+
+                <h1>
+                    Become An
+                    <span>Employer</span>
+                </h1>
+
+                <p>
+                    Create your company profile and start hiring
+                    top talents around the world.
+                </p>
+
+                <div class="benefit-list">
+
+                    <div class="benefit-item">
+                        ✅ Post unlimited jobs
+                    </div>
+
+                    <div class="benefit-item">
+                        ✅ Manage applications easily
+                    </div>
+
+                    <div class="benefit-item">
+                        ✅ Access talented candidates
+                    </div>
+
+                    <div class="benefit-item">
+                        ✅ Build your company brand
+                    </div>
+
+                </div>
+
+                <img
+                    src="{% static 'img/employer-illustration.png' %}"
+                    class="request-image"
+                >
+
+            </div>
+
+            <!-- RIGHT -->
+            <div class="request-right">
+
+                <!-- EXISTING -->
+                {% if existing %}
+
+                <div class="status-box pending-box">
+
+                    <div class="status-icon">
+                        ⏳
+                    </div>
+
+                    <h3>
+                        Request Submitted
+                    </h3>
+
+                    <p>
+                        Bạn đã gửi yêu cầu trở thành Employer.
+                        Vui lòng chờ admin xét duyệt.
+                    </p>
+
+                </div>
+
+                {% elif user.role == 'employer' and user.company %}
+
+                <div class="status-box success-box">
+
+                    <div class="status-icon">
+                        ✅
+                    </div>
+
+                    <h3>
+                        You're Already An Employer
+                    </h3>
+
+                    <p>
+                        Bạn hiện đang quản lý công ty
+                        <strong>{{ user.company.name }}</strong>
+                    </p>
+
+                </div>
+
+                {% else %}
+
+                <!-- FORM -->
+                <div class="request-card">
+
+                    <div class="request-card-header">
+
+                        <h2>
+                            Company Information
+                        </h2>
+
+                        <p>
+                            Fill in your company details below
+                        </p>
+
+                    </div>
+
+                    <form method="POST">
+
+                        {% csrf_token %}
+
+                        <!-- COMPANY -->
+                        <div class="modern-input-group">
+
+                            <label>
+                                Company Name
+                            </label>
+
+                            <input
+                                type="text"
+                                name="company_name"
+                                placeholder="Enter company name"
+                                required
+                            >
+
+                        </div>
+
+                        <!-- LOCATION -->
+                        <div class="modern-input-group">
+
+                            <label>
+                                Company Location
+                            </label>
+
+                            <input
+                                type="text"
+                                name="location"
+                                placeholder="Hồ Chí Minh, Việt Nam"
+                                required
+                            >
+
+                        </div>
+
+                        <!-- WEBSITE -->
+                        <div class="modern-input-group">
+
+                            <label>
+                                Website
+                            </label>
+
+                            <input
+                                type="url"
+                                name="website"
+                                placeholder="https://yourcompany.com"
+                            >
+
+                        </div>
+
+                        <!-- DESCRIPTION -->
+                        <div class="modern-input-group">
+
+                            <label>
+                                Company Description
+                            </label>
+
+                            <textarea
+                                name="description"
+                                rows="5"
+                                placeholder="Describe your company..."
+                            ></textarea>
+
+                        </div>
+
+                        <!-- BUTTON -->
+                        <button
+                            type="submit"
+                            class="submit-request-btn"
+                        >
+                            Submit Request
+                        </button>
+
+                    </form>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+{% endblock %}

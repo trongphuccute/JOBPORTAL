@@ -1,21 +1,47 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LOGIN</title>
-  </head>
-  <body>
-    <h2>Login</h2>
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
 
-    {% if messages %} {% for message in messages %}
-    <p style="color: green">{{ message }}</p>
-    {% endfor %} {% endif %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
 
-    <form method="POST">
-      {% csrf_token %} {{ form.as_p }}
+<body>
 
-      <button type="submit">Login</button>
-    </form>
-  </body>
+<div class="auth-wrapper">
+
+  <div class="auth-card">
+
+    <div class="auth-left">
+      <h2>Welcome</h2>
+      <p>Hệ thống tuyển dụng thông minh</p>
+    </div>
+
+    <div class="auth-right">
+
+      <h3 class="auth-title">LOGIN</h3>
+
+      <form method="POST">
+        {% csrf_token %}
+
+        <div class="input-fancy">
+          <input type="text" name="username" placeholder="Username">
+        </div>
+
+        <div class="input-fancy">
+          <input type="password" name="password" placeholder="Password">
+        </div>
+
+        <button class="btn-fancy">Login</button>
+      </form>
+
+    </div>
+
+  </div>
+
+</div>
+
+</body>
 </html>
