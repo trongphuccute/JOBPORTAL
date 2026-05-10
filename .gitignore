@@ -1,23 +1,22 @@
 # Python
-*.pyc
 __pycache__/
-*.pyo
-*.pyd
-*.log
-*.pot
 *.py[cod]
-*.swp
+*.sqlite3
 
-# Django
-media/           # file upload
-staticfiles/     # collectstatic
-.env             # file chứa secret key, DB password
-*.env           # file chứa secret key, DB password
-# VSCode
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# Environment variables
+.env
+
+# Media & Static
+media/
+staticfiles/
+
+# VS Code
 .vscode/
 
 # macOS
 .DS_Store
-
-# PyCharm
-.idea/
