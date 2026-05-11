@@ -268,3 +268,136 @@ darkBtn.addEventListener("click", () => {
     }
 
 });
+/* ================= BLOG FORM ================= */
+function previewImage(file) {
+
+    const preview = document.getElementById("imagePreview");
+
+    if (file) {
+
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            preview.innerHTML = `
+                <img src="${e.target.result}" alt="Preview">
+            `;
+        };
+
+        reader.readAsDataURL(file);
+
+    } else {
+        preview.innerHTML = "";
+    }
+}
+
+/* INPUT FILE CHANGE */
+document.getElementById("id_image").addEventListener("change", function (event) {
+
+    const file = event.target.files[0];
+    previewImage(file);
+
+});
+const uploadArea = document.getElementById("uploadArea");
+
+const imageInput = document.getElementById("id_image");
+
+/* CLICK CHỌN FILE */
+
+uploadArea.addEventListener("click", () => {
+
+    imageInput.click();
+
+});
+
+/* DRAG OVER */
+
+uploadArea.addEventListener("dragover", (e) => {
+
+    e.preventDefault();
+
+    uploadArea.classList.add("dragover");
+
+});
+
+/* DRAG LEAVE */
+
+uploadArea.addEventListener("dragleave", () => {
+
+    uploadArea.classList.remove("dragover");
+
+});
+
+/* DROP FILE */
+
+uploadArea.addEventListener("drop", (e) => {
+
+    e.preventDefault();
+
+    uploadArea.classList.remove("dragover");
+
+    const files = e.dataTransfer.files;
+
+    if (files.length > 0) {
+
+        imageInput.files = files;
+
+        previewImage({
+
+            target: {
+
+                files: files
+
+            }
+
+        });
+
+    }
+
+});
+
+
+/* DOM LOADED */
+document.addEventListener("DOMContentLoaded", function () {
+
+    const uploadArea = document.getElementById("uploadArea");
+    const imageInput = document.getElementById("id_image");
+
+    /* CLICK TO SELECT */
+    uploadArea.addEventListener("click", () => {
+        imageInput.click();
+    });
+
+    /* DRAG OVER */
+    uploadArea.addEventListener("dragover", function (e) {
+
+        e.preventDefault();
+        uploadArea.classList.add("dragover");
+
+    });
+
+    /* DRAG LEAVE */
+    uploadArea.addEventListener("dragleave", function () {
+
+        uploadArea.classList.remove("dragover");
+
+    });
+
+    /* DROP FILE */
+    uploadArea.addEventListener("drop", function (e) {
+
+        e.preventDefault();
+
+        uploadArea.classList.remove("dragover");
+
+        const files = e.dataTransfer.files;
+
+        if (files.length > 0) {
+
+            imageInput.files = files;
+
+            previewImage(files[0]);
+
+        }
+    });
+
+});
