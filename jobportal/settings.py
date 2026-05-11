@@ -3,6 +3,10 @@ from pickle import FALSE
 from decouple import config
 import os
 import dj_database_url
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECRET_KEY
@@ -27,6 +31,9 @@ INSTALLED_APPS = [
     'jobs',
     'applications',
     'blog',
+    'notifications',
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
 MIDDLEWARE = [
@@ -112,3 +119,10 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 APPEND_SLASH = True
+
+cloudinary.config(
+    'cloud_name' : config('dwkgwqsy0'),
+    'api_key' : config('728352818168776'),
+    'api_secret' : config('2rSS7i9GnmqamPism8LmbcRRfFE')
+)  
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage' 
