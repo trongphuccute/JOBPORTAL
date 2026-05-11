@@ -272,7 +272,7 @@ def request_employer(request):
         EmployerRequest.objects.create(
             user=request.user,
             company_name=request.POST.get('company_name'),
-            description=request.POST.get('description'),
+            company_description=request.POST.get('description'),
         )
 
         messages.success(
