@@ -120,9 +120,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 APPEND_SLASH = True
 
 CLOUDINARY_STORAGE = {
-    'cloud_name' : config('CLOUD_NAME'),
-    'api_key' : config('API_KEY'),
-    'api_secret' : config('API_SECRET')
+    'cloud_name' : config('CLOUDINARY_CLOUD_NAME'),
+    'api_key' : config('CLOUDINARY_API_KEY'),
+    'api_secret' : config('CLOUDINARY_API_SECRET')
 }
 STORAGES = {
     'default':{
