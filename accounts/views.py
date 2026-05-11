@@ -84,7 +84,7 @@ def dashboard(request):
                 request,
                 'Bạn chưa có công ty nào. Vui lòng tạo công ty để đăng tin tuyển dụng.'
             )
-            return redirect('accounts:request_employer')
+            return redirect('request_employer')
 
         # jobs của employer
 
