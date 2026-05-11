@@ -121,8 +121,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 APPEND_SLASH = True
 
 CLOUDINARY_STORAGE = {
-    'cloud_name' : config('dwkgwqsy0'),
-    'api_key' : config('728352818168776'),
-    'api_secret' : config('2rSS7i9GnmqamPism8LmbcRRfFE')
+    'cloud_name' : config('CLOUD_NAME'),
+    'api_key' : config('API_KEY'),
+    'api_secret' : config('API_SECRET')
 }
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage' 
