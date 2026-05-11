@@ -64,8 +64,7 @@
         <!-- BUTTONS -->
         <div class="form-actions">
           <button type="submit" class="btn-primary">
-            {% if post %} ✓ Cập nhật bài viết {% else %} ✓ Đăng bài viết {%
-            endif %}
+            {% if post %}✓ Cập nhật bài viết{% else %}✓ Đăng bài viết{% endif %}
           </button>
           <a href="{% url 'blog:blog_list' %}" class="btn-secondary">
             ← Quay lại
