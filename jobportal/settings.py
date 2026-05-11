@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     'accounts',
     'jobs',
     'applications',
-    'blog'.
+    'blog',
     'cloudinary',
     'cloudinary_storage',
 ]
