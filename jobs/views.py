@@ -178,7 +178,7 @@ def my_jobs(request):
     })
 
 def update_company(request):
-    company = request.user.company
+    company = request.user.company_profile
 
     if request.method == 'POST':
         form = CompanyForm(request.POST, request.FILES, instance=company)
@@ -193,7 +193,7 @@ def update_company(request):
 
 def company_profile(request, id):
 
-    company = Company.objects.get(id=id)
+    company = get_object_or_404(Company, id=id)
 
     jobs = Job.objects.filter(
         company=company

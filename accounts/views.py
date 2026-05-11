@@ -78,7 +78,13 @@ def dashboard(request):
 
         # lấy company của employer
 
-        company = Company.objects.get(user=request.user)
+        company = Company.objects.filter(user=request.user).first()
+        if not company:
+            messages.warning(
+                request,
+                'Bạn chưa có công ty nào. Vui lòng tạo công ty để đăng tin tuyển dụng.'
+            )
+            return redirect('accounts:request_employer')
 
         # jobs của employer
 
