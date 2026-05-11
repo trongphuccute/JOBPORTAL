@@ -16,12 +16,12 @@
 
                     {% if user.avatar %}
                     <img
-                        src="{{ user.avatar.url }}"
+                        src="{{user.avatar.url }}"
                         class="avatar-image"    
                     >
                     {% else %}  
                     <img 
-                        src="{% static 'img/default.jpg' %}"
+                        src="https://res.cloudinary.com/dwkgwqsy0/image/upload/v1778516388/default_c4w5kc.png"
                         class="avatar-image"    
                     >
                     {% endif %}
