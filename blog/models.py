@@ -43,10 +43,10 @@ class BlogPost(models.Model):
         return self.title
 
     def total_likes(self):
-        return self.like_set.count()
+        return self.likes.count()
 
     def total_comments(self):
-        return self.comment_set.count()
+        return self.comments.count()
 
 
 class Like(models.Model):
