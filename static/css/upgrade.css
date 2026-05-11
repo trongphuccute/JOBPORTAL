@@ -7871,3 +7871,87 @@ body{
     }
 
 }
+/* =========================
+   MOBILE UI PATCH (ADD ONLY)
+   KHÔNG ẢNH HƯỞNG DESKTOP
+========================= */
+
+@media (max-width: 768px) {
+
+    /* navbar spacing gọn hơn */
+    .navbar {
+        padding: 8px 12px;
+    }
+
+    /* brand nhỏ lại cho vừa mobile */
+    .navbar-brand {
+        font-size: 18px;
+    }
+
+    /* menu căn giữa + thoáng */
+    .navbar-nav {
+        text-align: center;
+        width: 100%;
+        gap: 8px;
+    }
+
+    .nav-item {
+        margin: 5px 0;
+    }
+
+    /* user box (avatar + name) gọn lại */
+    .nav-user-box {
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .profile-avatar {
+        width: 32px;
+        height: 32px;
+    }
+
+    .nav-user-name {
+        font-size: 13px;
+    }
+
+    /* dropdown full width cho dễ bấm */
+    .dropdown-menu {
+        width: 100%;
+        text-align: center;
+        border-radius: 10px;
+    }
+
+    /* nút login/register full width */
+    .btn,
+    .btn-warning {
+        width: 100%;
+        margin-top: 6px;
+    }
+
+    /* fix spacing container (tránh sát mép) */
+    .container {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+}
+
+/* =========================
+   SMALL PHONE (<576px)
+========================= */
+
+@media (max-width: 576px) {
+
+    .navbar-brand {
+        font-size: 16px;
+    }
+
+    .nav-link {
+        font-size: 14px;
+    }
+
+    .profile-avatar {
+        width: 28px;
+        height: 28px;
+    }
+}

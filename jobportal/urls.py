@@ -29,6 +29,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('jobs/', include('jobs.urls')),          
     path('applications/', include('applications.urls')),
+    path('blog/', include('blog.urls')),
     path('my-jobs/', my_jobs, name='my_jobs'),
     
 

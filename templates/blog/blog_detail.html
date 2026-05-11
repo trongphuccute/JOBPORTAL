@@ -1,0 +1,887 @@
+{% extends 'base/base.html' %} {% load static %} {% block content %}
+
+<section class="blog-detail-page">
+  <div class="container">
+    <!-- HEADER -->
+    <div class="blog-detail-header">
+      <a href="{% url 'blog:blog_list' %}" class="back-link"> ← Quay lại </a>
+
+      <h1 class="blog-detail-title">{{ post.title }}</h1>
+
+      <!-- META INFO -->
+      <div class="blog-detail-meta">
+        <div class="author-info">
+          {% if post.author.avatar %}
+          <img
+            src="{{ post.author.avatar.url }}"
+            class="author-pic"
+            alt="{{ post.author.username }}"
+          />
+          {% else %}
+          <div class="author-pic-default">
+            {{ post.author.first_name|first|upper }}
+          </div>
+          {% endif %}
+
+          <div class="author-details">
+            <a href="#" class="author-name">{{ post.author.first_name }}</a>
+            <span class="publish-date">
+              Đăng ngày {{ post.created_at|date:"d/m/Y H:i" }}
+            </span>
+            {% if post.updated_at != post.created_at %}
+            <span class="update-date">
+              (Cập nhật {{ post.updated_at|date:"d/m/Y" }})
+            </span>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="blog-actions">
+          {% if user == post.author or user.is_staff %}
+          <a
+            href="{% url 'blog:edit_post' post.slug %}"
+            class="action-btn edit-btn"
+          >
+            ✏️ Chỉnh sửa
+          </a>
+          <a
+            href="{% url 'blog:delete_post' post.slug %}"
+            class="action-btn delete-btn"
+            onclick="return confirm('Bạn chắc chắn muốn xóa bài viết này?');"
+          >
+            🗑️ Xóa
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      <!-- MAIN CONTENT -->
+      <div class="col-lg-8">
+        <!-- IMAGE -->
+        {% if post.image %}
+        <div class="blog-detail-image">
+          <img src="{{ post.image.url }}" alt="{{ post.title }}" />
+        </div>
+        {% endif %}
+
+        <!-- CONTENT -->
+        <div class="blog-content">{{ post.content|linebreaks }}</div>
+
+        <!-- ENGAGEMENT SECTION -->
+        <div class="blog-engagement">
+          <!-- LIKE BUTTON -->
+          <div class="engagement-item">
+            {% if user.is_authenticated %}
+            <button
+              class="like-btn {% if user_liked %}liked{% endif %}"
+              data-slug="{{ post.slug }}"
+              id="likeBtn"
+            >
+              {% if user_liked %} ❤️ Đã thích {% else %} 🤍 Thích {% endif %}
+            </button>
+            {% else %}
+            <a href="{% url 'login' %}" class="like-btn">
+              🤍 Đăng nhập để thích
+            </a>
+            {% endif %}
+            <span class="like-count" id="likeCount"
+              >{{ post.total_likes }}</span
+            >
+          </div>
+
+          <!-- SHARE BUTTON -->
+          <div class="engagement-item">
+            <button class="share-btn" onclick="copyLink()">📤 Chia sẻ</button>
+          </div>
+
+          <!-- COMMENT COUNT -->
+          <div class="engagement-item">
+            <span class="comment-count">
+              💬 {{ post.total_comments }} bình luận
+            </span>
+          </div>
+        </div>
+
+        <hr class="divider" />
+
+        <!-- COMMENTS SECTION -->
+        <div class="comments-section">
+          <h3 class="section-title">
+            💬 Bình luận ({{ post.total_comments }})
+          </h3>
+
+          <!-- ADD COMMENT FORM -->
+          {% if user.is_authenticated %}
+          <form
+            method="POST"
+            action="{% url 'blog:add_comment' post.slug %}"
+            class="comment-form"
+          >
+            {% csrf_token %}
+            <div class="comment-input-group">
+              <textarea
+                name="content"
+                placeholder="Viết bình luận của bạn..."
+                rows="3"
+                required
+              ></textarea>
+              <button type="submit" class="comment-submit">
+                Gửi bình luận
+              </button>
+            </div>
+          </form>
+          {% else %}
+          <div class="login-prompt">
+            <i class="fas fa-lock"></i>
+            <p>
+              Vui lòng <a href="{% url 'login' %}">đăng nhập</a> để bình luận
+            </p>
+          </div>
+          {% endif %}
+
+          <!-- COMMENTS LIST -->
+          <div class="comments-list">
+            {% for comment in comments %}
+            <div class="comment-item">
+              <div class="comment-header">
+                <div class="comment-author">
+                  {% if comment.user.avatar %}
+                  <img
+                    src="{{ comment.user.avatar.url }}"
+                    class="comment-avatar"
+                    alt="{{ comment.user.username }}"
+                  />
+                  {% else %}
+                  <div class="comment-avatar-default">
+                    {{ comment.user.first_name|first|upper }}
+                  </div>
+                  {% endif %}
+                  <div class="comment-author-info">
+                    <strong>{{ comment.user.first_name }}</strong>
+                    <span class="comment-date">
+                      {{ comment.created_at|date:"d/m/Y H:i" }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- DELETE COMMENT -->
+                {% if user == comment.user or user.is_staff %}
+                <a
+                  href="{% url 'blog:delete_comment' comment.id %}"
+                  class="delete-comment-btn"
+                  onclick="return confirm('Xóa bình luận này?');"
+                >
+                  ✕
+                </a>
+                {% endif %}
+              </div>
+              <div class="comment-content">
+                {{ comment.content|linebreaks }}
+              </div>
+            </div>
+            {% empty %}
+            <div class="no-comments">
+              <i class="fas fa-comment"></i>
+              <p>Chưa có bình luận nào. Hãy là người đầu tiên!</p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <div class="col-lg-4">
+        <div class="blog-sidebar">
+          <!-- AUTHOR CARD -->
+          <div class="author-card">
+            <h4>👤 Về tác giả</h4>
+            <div class="author-card-content">
+              {% if post.author.avatar %}
+              <img
+                src="{{ post.author.avatar.url }}"
+                class="author-avatar-large"
+                alt="{{ post.author.username }}"
+              />
+              {% else %}
+              <div class="author-avatar-large-default">
+                {{ post.author.first_name|first|upper }}
+              </div>
+              {% endif %}
+              <h5>{{ post.author.first_name }}</h5>
+              <p class="author-username">@{{ post.author.username }}</p>
+              <p class="author-bio">Thành viên cộng đồng JobPortal</p>
+              <div class="author-stats">
+                <div class="author-stat">
+                  <span class="stat-number"
+                    >{{ post.author.blog_posts.count }}</span
+                  >
+                  <span class="stat-label">Bài viết</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RELATED POSTS -->
+          <div class="related-posts">
+            <h4>📚 Bài viết khác</h4>
+            {% for related in post.author.blog_posts.exclude|slice:":3" %}
+            <a
+              href="{% url 'blog:blog_detail' related.slug %}"
+              class="related-post-item"
+            >
+              <span class="related-title"
+                >{{ related.title|truncatewords:8 }}</span
+              >
+              <span class="related-date"
+                >{{ related.created_at|date:"d/m/Y" }}</span
+              >
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ================= BLOG DETAIL ================= */
+  .blog-detail-page {
+    padding: 60px 0;
+    background: #f5f7fa;
+  }
+
+  .blog-detail-header {
+    margin-bottom: 40px;
+  }
+
+  .back-link {
+    display: inline-block;
+    color: #0a4a3c;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 20px;
+    transition: 0.3s;
+  }
+
+  .back-link:hover {
+    color: #f2b759;
+  }
+
+  .blog-detail-title {
+    font-size: 48px;
+    font-weight: 800;
+    color: #0a4a3c;
+    margin-bottom: 25px;
+    line-height: 1.2;
+  }
+
+  .blog-detail-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 20px 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  }
+
+  .author-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .author-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #f2b759;
+  }
+
+  .author-pic-default {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #0a4a3c;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 18px;
+  }
+
+  .author-details strong {
+    color: #0a4a3c;
+    font-weight: 700;
+  }
+
+  .author-name {
+    display: block;
+    color: #0a4a3c;
+    text-decoration: none;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+
+  .publish-date {
+    display: block;
+    color: #999;
+    font-size: 14px;
+  }
+
+  .update-date {
+    color: #f2b759;
+    font-size: 12px;
+    margin-left: 8px;
+  }
+
+  .blog-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .action-btn {
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .edit-btn {
+    background: #0a4a3c;
+    color: white;
+  }
+
+  .edit-btn:hover {
+    background: #0f6b57;
+    transform: translateY(-2px);
+  }
+
+  .delete-btn {
+    background: #ff6b6b;
+    color: white;
+  }
+
+  .delete-btn:hover {
+    background: #ff5252;
+  }
+
+  /* ================= BLOG IMAGE & CONTENT ================= */
+  .blog-detail-image {
+    width: 100%;
+    height: 400px;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 40px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  }
+
+  .blog-detail-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .blog-content {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    margin-bottom: 40px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    line-height: 1.8;
+    color: #333;
+    font-size: 16px;
+  }
+
+  .blog-content p {
+    margin-bottom: 20px;
+  }
+
+  .blog-content h2 {
+    color: #0a4a3c;
+    margin: 30px 0 15px 0;
+    font-weight: 700;
+  }
+
+  .blog-content h3 {
+    color: #0f6b57;
+    margin: 25px 0 12px 0;
+    font-weight: 600;
+  }
+
+  .blog-content ul,
+  .blog-content ol {
+    margin: 20px 0;
+    padding-left: 30px;
+  }
+
+  .blog-content li {
+    margin-bottom: 10px;
+  }
+
+  .blog-content strong {
+    color: #0a4a3c;
+  }
+
+  /* ================= ENGAGEMENT ================= */
+  .blog-engagement {
+    display: flex;
+    gap: 20px;
+    background: white;
+    padding: 20px 25px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  }
+
+  .engagement-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .like-btn {
+    background: white;
+    border: 2px solid #f2b759;
+    color: #f2b759;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .like-btn:hover {
+    background: #f2b759;
+    color: white;
+  }
+
+  .like-btn.liked {
+    background: #f2b759;
+    color: white;
+  }
+
+  .share-btn {
+    background: white;
+    border: 2px solid #0a4a3c;
+    color: #0a4a3c;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .share-btn:hover {
+    background: #0a4a3c;
+    color: white;
+  }
+
+  .like-count,
+  .comment-count {
+    color: #0a4a3c;
+    font-weight: 600;
+  }
+
+  .divider {
+    border: none;
+    border-top: 2px solid #eee;
+    margin: 40px 0;
+  }
+
+  /* ================= COMMENTS ================= */
+  .comments-section {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  }
+
+  .section-title {
+    color: #0a4a3c;
+    font-weight: 700;
+    margin-bottom: 30px;
+  }
+
+  .comment-form {
+    margin-bottom: 35px;
+  }
+
+  .comment-input-group {
+    display: flex;
+    gap: 15px;
+  }
+
+  .comment-input-group textarea {
+    flex: 1;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    padding: 15px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    resize: vertical;
+    transition: border 0.3s;
+  }
+
+  .comment-input-group textarea:focus {
+    outline: none;
+    border-color: #0a4a3c;
+  }
+
+  .comment-submit {
+    background: #0a4a3c;
+    color: white;
+    border: none;
+    padding: 15px 25px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    white-space: nowrap;
+  }
+
+  .comment-submit:hover {
+    background: #0f6b57;
+    transform: translateY(-2px);
+  }
+
+  .login-prompt {
+    text-align: center;
+    padding: 30px;
+    background: #f0f0f0;
+    border-radius: 8px;
+    color: #666;
+  }
+
+  .login-prompt i {
+    font-size: 40px;
+    color: #999;
+    margin-bottom: 10px;
+  }
+
+  .login-prompt a {
+    color: #0a4a3c;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .login-prompt a:hover {
+    color: #f2b759;
+  }
+
+  .comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .comment-item {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid #f2b759;
+  }
+
+  .comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+  }
+
+  .comment-author {
+    display: flex;
+    gap: 12px;
+  }
+
+  .comment-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #f2b759;
+  }
+
+  .comment-avatar-default {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #0a4a3c;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+  }
+
+  .comment-author-info strong {
+    display: block;
+    color: #0a4a3c;
+    margin-bottom: 5px;
+  }
+
+  .comment-date {
+    color: #999;
+    font-size: 12px;
+  }
+
+  .delete-comment-btn {
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+
+  .delete-comment-btn:hover {
+    background: #ff5252;
+    transform: scale(1.1);
+  }
+
+  .comment-content {
+    color: #333;
+    line-height: 1.6;
+  }
+
+  .no-comments {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+  }
+
+  .no-comments i {
+    font-size: 60px;
+    color: #ddd;
+    display: block;
+    margin-bottom: 15px;
+  }
+
+  /* ================= SIDEBAR ================= */
+  .blog-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
+
+  .author-card,
+  .related-posts {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  }
+
+  .author-card h4,
+  .related-posts h4 {
+    color: #0a4a3c;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  .author-card-content {
+    text-align: center;
+  }
+
+  .author-avatar-large {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #f2b759;
+    margin-bottom: 15px;
+  }
+
+  .author-avatar-large-default {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: #0a4a3c;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 40px;
+    margin: 0 auto 15px;
+  }
+
+  .author-card-content h5 {
+    color: #0a4a3c;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+
+  .author-username {
+    color: #f2b759;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+
+  .author-bio {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 15px;
+  }
+
+  .author-stats {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+  }
+
+  .author-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .stat-number {
+    color: #0a4a3c;
+    font-weight: 700;
+    font-size: 20px;
+  }
+
+  .stat-label {
+    color: #999;
+    font-size: 12px;
+  }
+
+  .related-posts {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .related-post-item {
+    display: block;
+    padding: 12px 15px;
+    background: #f9f9f9;
+    border-left: 3px solid transparent;
+    text-decoration: none;
+    transition: all 0.3s;
+    border-radius: 4px;
+  }
+
+  .related-post-item:hover {
+    background: white;
+    border-left-color: #f2b759;
+    padding-left: 20px;
+  }
+
+  .related-title {
+    display: block;
+    color: #0a4a3c;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+
+  .related-date {
+    display: block;
+    color: #999;
+    font-size: 12px;
+  }
+
+  @media (max-width: 768px) {
+    .blog-detail-title {
+      font-size: 32px;
+    }
+
+    .blog-detail-meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+
+    .blog-actions {
+      width: 100%;
+    }
+
+    .blog-actions button,
+    .blog-actions a {
+      flex: 1;
+    }
+
+    .blog-detail-image {
+      height: 250px;
+    }
+
+    .blog-content {
+      padding: 20px;
+    }
+
+    .blog-engagement {
+      flex-wrap: wrap;
+    }
+
+    .comment-input-group {
+      flex-direction: column;
+    }
+
+    .comment-submit {
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  function copyLink() {
+    const link = window.location.href;
+    navigator.clipboard.writeText(link).then(() => {
+      alert("Đã sao chép liên kết!");
+    });
+  }
+
+  // Like button AJAX
+  document.addEventListener("DOMContentLoaded", function () {
+    const likeBtn = document.getElementById("likeBtn");
+    if (likeBtn) {
+      likeBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        const slug = this.dataset.slug;
+
+        fetch(`/blog/post/${slug}/like/`, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "X-Requested-With": "XMLHttpRequest",
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.liked) {
+              likeBtn.classList.add("liked");
+              likeBtn.textContent = "❤️ Đã thích";
+            } else {
+              likeBtn.classList.remove("liked");
+              likeBtn.textContent = "🤍 Thích";
+            }
+            document.getElementById("likeCount").textContent = data.total_likes;
+          });
+      });
+    }
+  });
+</script>
+
+{% endblock %}

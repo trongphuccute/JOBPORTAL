@@ -1,0 +1,661 @@
+{% extends 'base/base.html' %} {% load static %} {% block content %}
+
+<!-- ================= HERO ================= -->
+<section class="blog-hero">
+  <div class="hero-dark-overlay"></div>
+  <div class="container position-relative">
+    <div class="blog-hero-content">
+      <span class="blog-badge"> 📝 Chia sẻ kinh nghiệm và bài viết </span>
+      <h1>Khám phá <span>Thế giới Blog</span></h1>
+      <p>
+        Đọc những bài viết hay, chia sẻ kinh nghiệm và kết nối cùng cộng đồng
+      </p>
+
+      <!-- SEARCH -->
+      <form
+        method="GET"
+        action="{% url 'blog:blog_list' %}"
+        class="modern-search-box"
+      >
+        <div class="search-input-group">
+          <input
+            type="text"
+            name="search"
+            placeholder="Tìm bài viết..."
+            value="{{ search }}"
+          />
+          <button type="submit">Tìm kiếm</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CONTENT ================= -->
+<section class="blog-list-section">
+  <div class="container">
+    <div class="row g-4">
+      <!-- SIDEBAR -->
+      <div class="col-lg-3">
+        <div class="modern-filter-box">
+          <h4>💡 Bộ lọc</h4>
+
+          <!-- CREATE BLOG BUTTON -->
+          {% if user.is_authenticated %}
+          <a href="{% url 'blog:create_post' %}" class="blog-create-btn">
+            ✍️ Viết bài mới
+          </a>
+          {% else %}
+          <a href="{% url 'login' %}" class="blog-create-btn">
+            ✍️ Đăng nhập để viết
+          </a>
+          {% endif %}
+
+          <hr />
+
+          <!-- RECENT POSTS -->
+          <div class="filter-group">
+            <h5>📰 Bài viết gần đây</h5>
+            {% for post in page_obj.paginator.object_list|slice:":5" %}
+            <a
+              href="{% url 'blog:blog_detail' post.slug %}"
+              class="recent-post-link"
+            >
+              {{ post.title|truncatewords:5 }}
+            </a>
+            {% empty %}
+            <p class="text-muted">Chưa có bài viết nào</p>
+            {% endfor %}
+          </div>
+
+          <hr />
+
+          <!-- MY POSTS (if authenticated) -->
+          {% if user.is_authenticated %}
+          <a href="{% url 'blog:my_posts' %}" class="filter-btn">
+            📚 Bài viết của tôi
+          </a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- BLOG POSTS -->
+      <div class="col-lg-9">
+        <!-- TOP -->
+        <div class="blog-topbar">
+          <h3>
+            {% if search %} Kết quả tìm kiếm: "{{ search }}" {% else %} Tất cả
+            bài viết {% endif %}
+          </h3>
+          <span class="blog-count">
+            {{ page_obj.paginator.count }} bài viết
+          </span>
+        </div>
+
+        <!-- BLOG CARDS -->
+        <div class="blog-cards-container">
+          {% for post in posts %}
+          <article class="blog-card">
+            <!-- IMAGE -->
+            {% if post.image %}
+            <div class="blog-card-image">
+              <img src="{{ post.image.url }}" alt="{{ post.title }}" />
+            </div>
+            {% else %}
+            <div class="blog-card-image blog-card-image-placeholder">
+              <i class="fas fa-newspaper"></i>
+            </div>
+            {% endif %}
+
+            <!-- CONTENT -->
+            <div class="blog-card-content">
+              <!-- AUTHOR & DATE -->
+              <div class="blog-card-meta">
+                <a href="#" class="blog-author">
+                  {% if post.author.avatar %}
+                  <img
+                    src="{{ post.author.avatar.url }}"
+                    class="author-avatar"
+                    alt="{{ post.author.username }}"
+                  />
+                  {% else %}
+                  <div class="author-avatar-default">
+                    {{ post.author.first_name|first|upper }}
+                  </div>
+                  {% endif %}
+                  <span>{{ post.author.username }}</span>
+                </a>
+                <span class="blog-date">
+                  📅 {{ post.created_at|date:"d/m/Y" }}
+                </span>
+              </div>
+
+              <!-- TITLE -->
+              <h3 class="blog-title">
+                <a href="{% url 'blog:blog_detail' post.slug %}">
+                  {{ post.title }}
+                </a>
+              </h3>
+
+              <!-- EXCERPT -->
+              <p class="blog-excerpt">{{ post.content|truncatewords:30 }}</p>
+
+              <!-- STATS -->
+              <div class="blog-stats">
+                <span class="stat-item"> ❤️ {{ post.total_likes }} like </span>
+                <span class="stat-item">
+                  💬 {{ post.total_comments }} bình luận
+                </span>
+              </div>
+
+              <!-- READ MORE -->
+              <a
+                href="{% url 'blog:blog_detail' post.slug %}"
+                class="blog-read-more"
+              >
+                Đọc tiếp <i class="fas fa-arrow-right"></i>
+              </a>
+            </div>
+          </article>
+          {% empty %}
+          <div class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <h4>Chưa có bài viết nào</h4>
+            <p>Hãy là người viết bài viết đầu tiên!</p>
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- PAGINATION -->
+        {% if page_obj.has_other_pages %}
+        <nav class="pagination-container">
+          <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+              <a class="page-link" href="?page=1&search={{ search }}">
+                « Đầu tiên
+              </a>
+            </li>
+            <li class="page-item">
+              <a
+                class="page-link"
+                href="?page={{ page_obj.previous_page_number }}&search={{ search }}"
+              >
+                ‹ Trước
+              </a>
+            </li>
+            {% endif %}
+
+            <li class="page-item active">
+              <span class="page-link">
+                Trang {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+              </span>
+            </li>
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+              <a
+                class="page-link"
+                href="?page={{ page_obj.next_page_number }}&search={{ search }}"
+              >
+                Sau ›
+              </a>
+            </li>
+            <li class="page-item">
+              <a
+                class="page-link"
+                href="?page={{ page_obj.paginator.num_pages }}&search={{ search }}"
+              >
+                Cuối »
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </nav>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ================= BLOG HERO ================= */
+  .blog-hero {
+    position: relative;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 0;
+    margin-top: -70px;
+    padding-top: 100px;
+    background: linear-gradient(135deg, #0a4a3c 0%, #0f6b57 100%);
+    overflow: hidden;
+  }
+
+  .hero-dark-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  .blog-hero-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    color: white;
+  }
+
+  .blog-badge {
+    display: inline-block;
+    background: rgba(242, 183, 89, 0.2);
+    color: #f2b759;
+    padding: 10px 20px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+
+  .blog-hero h1 {
+    font-size: 60px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+
+  .blog-hero h1 span {
+    color: #f2b759;
+    display: block;
+  }
+
+  .blog-hero p {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 40px;
+  }
+
+  .modern-search-box {
+    max-width: 550px;
+    margin: 0 auto;
+  }
+
+  .search-input-group {
+    display: flex;
+    background: white;
+    border-radius: 50px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  .search-input-group input {
+    flex: 1;
+    border: none;
+    padding: 16px 25px;
+    font-size: 16px;
+    outline: none;
+  }
+
+  .search-input-group button {
+    background: #f2b759;
+    border: none;
+    padding: 16px 35px;
+    font-weight: 700;
+    color: #0a4a3c;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .search-input-group button:hover {
+    background: #ffc85c;
+    transform: scale(1.02);
+  }
+
+  /* ================= BLOG LIST ================= */
+  .blog-list-section {
+    padding: 60px 0;
+    background: #f5f7fa;
+  }
+
+  .modern-filter-box {
+    background: white;
+    border-radius: 18px;
+    padding: 25px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 90px;
+  }
+
+  .modern-filter-box h4 {
+    color: #0a4a3c;
+    margin-bottom: 25px;
+    font-weight: 700;
+  }
+
+  .blog-create-btn {
+    display: block;
+    width: 100%;
+    background: #0a4a3c;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.3s;
+    margin-bottom: 20px;
+  }
+
+  .blog-create-btn:hover {
+    background: #0f6b57;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(10, 74, 60, 0.3);
+  }
+
+  .filter-group {
+    margin-bottom: 20px;
+  }
+
+  .filter-group h5 {
+    color: #0a4a3c;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .recent-post-link {
+    display: block;
+    padding: 10px;
+    margin: 5px 0;
+    color: #0a4a3c;
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: all 0.3s;
+  }
+
+  .recent-post-link:hover {
+    border-left-color: #f2b759;
+    padding-left: 15px;
+    color: #f2b759;
+  }
+
+  .filter-btn {
+    display: block;
+    width: 100%;
+    background: #f2b759;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    color: #0a4a3c;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+
+  .filter-btn:hover {
+    background: #ffc85c;
+    transform: translateY(-2px);
+  }
+
+  /* ================= BLOG CARDS ================= */
+  .blog-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  .blog-topbar h3 {
+    color: #0a4a3c;
+    font-weight: 700;
+  }
+
+  .blog-count {
+    background: #0a4a3c;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+  .blog-cards-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+
+  .blog-card {
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .blog-card:hover {
+    box-shadow: 0 20px 40px rgba(10, 74, 60, 0.15);
+    transform: translateY(-5px);
+  }
+
+  .blog-card-image {
+    width: 280px;
+    height: 280px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .blog-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+
+  .blog-card:hover .blog-card-image img {
+    transform: scale(1.1);
+  }
+
+  .blog-card-image-placeholder {
+    background: linear-gradient(135deg, #0a4a3c, #0f6b57);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 80px;
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .blog-card-content {
+    flex: 1;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .blog-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+  }
+
+  .blog-author {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #0a4a3c;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+
+  .blog-author:hover {
+    color: #f2b759;
+  }
+
+  .author-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #f2b759;
+  }
+
+  .author-avatar-default {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background: #0a4a3c;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+  }
+
+  .blog-date {
+    color: #999;
+    font-size: 14px;
+    margin-left: auto;
+  }
+
+  .blog-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #0a4a3c;
+    margin: 15px 0;
+    line-height: 1.3;
+  }
+
+  .blog-title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .blog-title a:hover {
+    color: #f2b759;
+  }
+
+  .blog-excerpt {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    flex: 1;
+  }
+
+  .blog-stats {
+    display: flex;
+    gap: 25px;
+    margin-bottom: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+  }
+
+  .stat-item {
+    color: #0a4a3c;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .blog-read-more {
+    display: inline-block;
+    color: #f2b759;
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.3s;
+    align-self: flex-start;
+  }
+
+  .blog-read-more:hover {
+    color: #0a4a3c;
+    gap: 8px;
+  }
+
+  .blog-read-more i {
+    margin-left: 8px;
+    transition: 0.3s;
+  }
+
+  .blog-read-more:hover i {
+    transform: translateX(5px);
+  }
+
+  /* ================= EMPTY STATE ================= */
+  .empty-state {
+    text-align: center;
+    padding: 60px 30px;
+    color: #999;
+  }
+
+  .empty-state i {
+    font-size: 80px;
+    color: #ddd;
+    margin-bottom: 20px;
+  }
+
+  .empty-state h4 {
+    color: #0a4a3c;
+    margin-bottom: 10px;
+  }
+
+  /* ================= PAGINATION ================= */
+  .pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+  }
+
+  .pagination {
+    display: flex;
+    gap: 10px;
+    list-style: none;
+    padding: 0;
+  }
+
+  .page-item .page-link {
+    padding: 10px 15px;
+    border-radius: 8px;
+    color: #0a4a3c;
+    text-decoration: none;
+    background: white;
+    border: 1px solid #ddd;
+    transition: all 0.3s;
+  }
+
+  .page-item .page-link:hover {
+    background: #f2b759;
+    border-color: #f2b759;
+    color: #0a4a3c;
+  }
+
+  .page-item.active .page-link {
+    background: #0a4a3c;
+    color: white;
+    border-color: #0a4a3c;
+  }
+
+  @media (max-width: 768px) {
+    .blog-hero h1 {
+      font-size: 40px;
+    }
+
+    .blog-card {
+      flex-direction: column;
+    }
+
+    .blog-card-image {
+      width: 100%;
+      height: 250px;
+    }
+
+    .blog-topbar {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 15px;
+    }
+  }
+</style>
+
+{% endblock %}

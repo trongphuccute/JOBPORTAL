@@ -1,0 +1,270 @@
+{% extends 'base/base.html' %} {% load static %} {% block content %}
+
+<section class="confirm-delete-page">
+  <div class="container">
+    <div class="delete-modal">
+      <div class="delete-icon">
+        <i class="fas fa-exclamation-circle"></i>
+      </div>
+
+      <h1>Xác nhận xóa</h1>
+
+      <p class="warning-message">
+        Bạn có chắc chắn muốn xóa bài viết này không?
+        <strong>Hành động này không thể hoàn tác.</strong>
+      </p>
+
+      <!-- POST INFO -->
+      <div class="post-info-box">
+        <div class="post-info-item">
+          <span class="label">Tiêu đề:</span>
+          <span class="value">{{ post.title }}</span>
+        </div>
+        <div class="post-info-item">
+          <span class="label">Tác giả:</span>
+          <span class="value">{{ post.author.first_name }}</span>
+        </div>
+        <div class="post-info-item">
+          <span class="label">Ngày đăng:</span>
+          <span class="value">{{ post.created_at|date:"d/m/Y H:i" }}</span>
+        </div>
+        <div class="post-info-item">
+          <span class="label">Tương tác:</span>
+          <span class="value">
+            {{ post.total_likes }} like, {{ post.total_comments }} bình luận
+          </span>
+        </div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="action-buttons">
+        <form method="POST" class="delete-form">
+          {% csrf_token %}
+          <button type="submit" class="btn-delete-confirm">
+            🗑️ Xóa bài viết
+          </button>
+        </form>
+
+        <a href="{% url 'blog:blog_detail' post.slug %}" class="btn-cancel">
+          ← Quay lại
+        </a>
+      </div>
+
+      <!-- CONSEQUENCES -->
+      <div class="consequences">
+        <h4>⚠️ Điều sẽ xảy ra:</h4>
+        <ul>
+          <li>Bài viết sẽ bị xóa vĩnh viễn</li>
+          <li>Tất cả bình luận và like sẽ bị xóa</li>
+          <li>Bài viết sẽ không thể khôi phục</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ================= CONFIRM DELETE PAGE ================= */
+  .confirm-delete-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 70px);
+    padding: 40px 0;
+    background: #f5f7fa;
+  }
+
+  .delete-modal {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    padding: 50px 40px;
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .delete-icon {
+    font-size: 80px;
+    color: #ff6b6b;
+    margin-bottom: 20px;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%,
+    100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+
+  .delete-modal h1 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #0a4a3c;
+    margin-bottom: 15px;
+  }
+
+  .warning-message {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+  }
+
+  .warning-message strong {
+    color: #ff6b6b;
+  }
+
+  /* ================= POST INFO BOX ================= */
+  .post-info-box {
+    background: #f9f9f9;
+    border: 2px solid #ff6b6b;
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 30px;
+    text-align: left;
+  }
+
+  .post-info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+  }
+
+  .post-info-item:last-child {
+    border-bottom: none;
+  }
+
+  .post-info-item .label {
+    color: #999;
+    font-weight: 600;
+  }
+
+  .post-info-item .value {
+    color: #0a4a3c;
+    font-weight: 700;
+    text-align: right;
+    word-break: break-word;
+  }
+
+  /* ================= ACTION BUTTONS ================= */
+  .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 30px;
+  }
+
+  .delete-form {
+    width: 100%;
+  }
+
+  .btn-delete-confirm {
+    width: 100%;
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 16px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .btn-delete-confirm:hover {
+    background: #ff5252;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
+  }
+
+  .btn-delete-confirm:active {
+    transform: translateY(0);
+  }
+
+  .btn-cancel {
+    display: block;
+    background: white;
+    color: #0a4a3c;
+    border: 2px solid #0a4a3c;
+    padding: 14px 25px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.3s;
+    text-align: center;
+  }
+
+  .btn-cancel:hover {
+    background: #0a4a3c;
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  /* ================= CONSEQUENCES ================= */
+  .consequences {
+    background: #fff5f5;
+    border-left: 4px solid #ff6b6b;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: left;
+  }
+
+  .consequences h4 {
+    color: #ff6b6b;
+    font-weight: 700;
+    margin: 0 0 12px 0;
+  }
+
+  .consequences ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .consequences li {
+    color: #666;
+    padding: 8px 0;
+    padding-left: 25px;
+    position: relative;
+  }
+
+  .consequences li:before {
+    content: "✕";
+    position: absolute;
+    left: 0;
+    color: #ff6b6b;
+    font-weight: 700;
+  }
+
+  @media (max-width: 768px) {
+    .delete-modal {
+      padding: 35px 25px;
+    }
+
+    .delete-modal h1 {
+      font-size: 24px;
+    }
+
+    .warning-message {
+      font-size: 14px;
+    }
+
+    .post-info-item {
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .post-info-item .value {
+      text-align: left;
+    }
+  }
+</style>
+
+{% endblock %}
