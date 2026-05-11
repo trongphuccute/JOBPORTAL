@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import EmployerRequest, User, Profile, Company
+from .models import EmployerRequest, User, Profile
 from .utils import send_employer_approved_email
+from jobs.models import Company
 
 
 admin.site.register(User)
