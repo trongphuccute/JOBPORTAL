@@ -27,6 +27,9 @@ class EmployerRequestAdmin(admin.ModelAdmin):
                 user=user,
                 defaults={
                     "name": req.company_name,
+                    "location": req.company_location,
+                    "website": req.company_website,
+                    "description": req.company_description
                 }
             )
 
