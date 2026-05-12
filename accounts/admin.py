@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib import messages
 from .models import EmployerRequest, User, Profile
 from .utils import send_employer_approved_email
 from jobs.models import Company
@@ -35,3 +36,5 @@ class EmployerRequestAdmin(admin.ModelAdmin):
 
             # 🔥 GỬI EMAIL
             send_employer_approved_email(user)
+        
+        messages.success(request, f"✅ {queryset.count()} employer(s) approved successfully!")

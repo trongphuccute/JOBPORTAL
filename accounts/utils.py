@@ -8,7 +8,7 @@ def send_employer_approved_email(user):
     subject = "🎉 Bạn đã trở thành Employer!"
     
     # Get site domain from settings or use default
-    site_url = getattr(settings, 'SITE_URL', 'https://jobportal.onrender.com')
+    site_url = getattr(settings, 'SITE_URL', 'https://jobportal-4z3o.onrender.com')
 
     message = f"""
 Xin chào {user.username},
@@ -24,6 +24,11 @@ JobPortal Team
 """
 
     try:
+        # Check if email is configured
+        if not settings.DEFAULT_FROM_EMAIL or settings.DEFAULT_FROM_EMAIL == 'None':
+            logger.warning(f"⚠️  Email not configured, skipping email to {user.email}")
+            return
+            
         send_mail(
             subject,
             message,
@@ -33,5 +38,5 @@ JobPortal Team
         )
         logger.info(f"✅ Email sent successfully to {user.email}")
     except Exception as e:
+        # Log error but don't raise - approval should not fail due to email
         logger.error(f"❌ Failed to send email to {user.email}: {str(e)}")
-        raise
