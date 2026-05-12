@@ -4,7 +4,7 @@ from django.conf import settings
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
-logger = logging.getLogger(_name_)
+logger = logging.getLogger(__name__)
 
 
 def send_employer_approved_email(user):
