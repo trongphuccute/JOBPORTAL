@@ -19,6 +19,7 @@
             <span class="company-badge">
                 🏢
             </span>
+
         </a>
 
         <div class="job-meta-row">
@@ -87,12 +88,30 @@
         <!-- LEFT -->
         <div class="col-lg-8">
 
-            <!-- IMAGE -->
-            {% if job.image %}
+            <!-- IMAGE (FIX + UPGRADE CLOUDINARY + MULTI IMAGE SUPPORT) -->
+            {% if job.image or job.images.all %}
 
             <div class="detail-card job-gallery">
 
-                <img src="{{ job.image.url }}">
+                <!-- MAIN IMAGE -->
+                {% if job.image %}
+                    <div class="job-main-image">
+                        <img src="{{ job.image.url }}" alt="{{ job.title }}">
+                    </div>
+                {% endif %}
+
+                <!-- GALLERY IMAGES -->
+                {% if job.images.all %}
+
+                    <div class="job-gallery-grid">
+
+                        {% for img in job.images.all %}
+                            <img src="{{ img.image.url }}" alt="job image">
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
 
             </div>
 

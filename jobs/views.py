@@ -60,16 +60,19 @@ def create_job(request):
         job_type = request.POST.get("job_type")
         salary = request.POST.get("salary")
 
-        # 🔥 Lấy danh sách ảnh
+        # 🔥 MAIN IMAGE (nếu bạn có field image)
+        main_image = request.FILES.get("image")
+
+        # 🔥 MULTIPLE IMAGES
         images = request.FILES.getlist("images")
 
-        # 🔥 Lấy company của user
+        # 🔥 COMPANY
         company = Company.objects.filter(user=request.user).first()
 
         if not company:
-            return redirect("accounts:request_employer")
+            return redirect('request_employer')
 
-        # ✅ TẠO JOB (QUAN TRỌNG: phải gán vào biến job)
+        # ✅ CREATE JOB
         job = Job.objects.create(
             title=title,
             description=description,
@@ -78,12 +81,14 @@ def create_job(request):
             location=location,
             job_type=job_type,
             salary=salary if salary else None,
-            company=company
+            company=company,
+            image=main_image
         )
 
-        # ✅ LƯU ẢNH
-        for img in images:
-            JobImage.objects.create(job=job, image=img)
+        # ✅ SAVE GALLERY IMAGES
+        if images:
+            for img in images:
+                JobImage.objects.create(job=job, image=img)
 
         return redirect("jobs:job_list")
 
@@ -169,7 +174,7 @@ def my_jobs(request):
     company = Company.objects.filter(user=request.user).first()
 
     if not company:
-        return redirect('accounts:request_employer')
+        return redirect('request_employer')
 
     jobs = Job.objects.filter(company=company).order_by('-created_at')
 
