@@ -61,7 +61,7 @@ def create_job(request):
         salary = request.POST.get("salary")
 
         # 🔥 MAIN IMAGE (nếu bạn có field image)
-        main_image = request.FILES.get("image")
+        main_image = images[0] if images else None
 
         # 🔥 MULTIPLE IMAGES
         images = request.FILES.getlist("images")
