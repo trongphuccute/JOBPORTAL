@@ -6,7 +6,7 @@ import threading
 logger = logging.getLogger(__name__)
 
 def send_employer_approved_email_async(user):
-    threading.Thread(target=send_employer_approved_email, args=(user,)).start()
+    threading.Thread(target=send_employer_approved_email_async, args=(user,)).start()
     try:
         subject = "🎉 Bạn đã trở thành Employer!"
 
@@ -24,9 +24,9 @@ Truy cập:
         send_mail(
             subject,
             message,
-            settings.EMAIL_HOST_USER,
+            settings.DEFAULT_FROM_EMAIL,
             [user.email],
-            fail_silently=True,
+            fail_silently=False,
         )
 
         logger.info(f"Email sent to {user.email}")
