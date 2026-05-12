@@ -60,12 +60,13 @@ def create_job(request):
         job_type = request.POST.get("job_type")
         salary = request.POST.get("salary")
 
+        #🔥 MULTIPLE IMAGES
+        images = request.FILES.getlist("images")
+
         # 🔥 MAIN IMAGE (nếu bạn có field image)
         main_image = images[0] if images else None
 
-        # 🔥 MULTIPLE IMAGES
-        images = request.FILES.getlist("images")
-
+    
         # 🔥 COMPANY
         company = Company.objects.filter(user=request.user).first()
 
