@@ -1,29 +1,44 @@
 import threading
 import logging
-
 from django.conf import settings
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(_name_)
 
 
 def send_employer_approved_email(user):
     try:
         site_url = getattr(settings, 'SITE_URL', 'https://jobportal-4z3o.onrender.com')
 
+        html_content = f"""
+        <div style="font-family:Arial;padding:20px;line-height:1.6">
+            <h2 style="color:#2c3e50;">🎉 Xin chào {user.username},</h2>
+
+            <p>Tài khoản của bạn đã <b>được duyệt</b>.</p>
+
+            <p>
+                Bạn có thể truy cập hệ thống tại:
+            </p>
+
+            <a href="{site_url}" 
+               style="display:inline-block;padding:10px 15px;background:#4CAF50;color:white;text-decoration:none;border-radius:6px;">
+               🚀 Truy cập hệ thống
+            </a>
+
+            <br><br>
+
+            <small style="color:#888">
+                Nếu bạn không yêu cầu email này, hãy bỏ qua.
+            </small>
+        </div>
+        """
+
         message = Mail(
             from_email=settings.DEFAULT_FROM_EMAIL,
             to_emails=user.email,
             subject="🎉 Bạn đã trở thành Employer!",
-            plain_text_content=f"""
-Xin chào {user.username},
-
-Tài khoản của bạn đã được duyệt.
-
-Truy cập:
-{site_url}/
-"""
+            html_content=html_content
         )
 
         sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
