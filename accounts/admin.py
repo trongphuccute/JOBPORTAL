@@ -23,7 +23,7 @@ class EmployerRequestAdmin(admin.ModelAdmin):
             user.role = 'employer'
             user.save()
 
-            # 🔥 TẠO COMPANY (PHẦN BẠN ĐANG THIẾU)
+            # 🔥 TẠO COMPANY
             Company.objects.get_or_create(
                 user=user,
                 defaults={
@@ -34,7 +34,12 @@ class EmployerRequestAdmin(admin.ModelAdmin):
                 }
             )
 
-            # 🔥 GỬI EMAIL
-            send_employer_approved_email(user)
+            # 🔥 GỬI EMAIL (wrapped in try-except to not block approval)
+            try:
+                send_employer_approved_email(user)
+            except Exception as e:
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.error(f"Email send error: {str(e)}")
         
         messages.success(request, f"✅ {queryset.count()} employer(s) approved successfully!")

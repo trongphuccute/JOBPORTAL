@@ -5,9 +5,10 @@ import logging
 logger = logging.getLogger(__name__)
 
 def send_employer_approved_email(user):
+    """Send approval email - non-blocking, email is optional"""
     subject = "🎉 Bạn đã trở thành Employer!"
     
-    # Get site domain from settings or use default
+    # Get site domain from settings
     site_url = getattr(settings, 'SITE_URL', 'https://jobportal-4z3o.onrender.com')
 
     message = f"""
@@ -25,18 +26,21 @@ JobPortal Team
 
     try:
         # Check if email is configured
-        if not settings.DEFAULT_FROM_EMAIL or settings.DEFAULT_FROM_EMAIL == 'None':
+        if not settings.DEFAULT_FROM_EMAIL or settings.DEFAULT_FROM_EMAIL in ['None', None, '']:
             logger.warning(f"⚠️  Email not configured, skipping email to {user.email}")
             return
-            
+        
+        # Try to send email with timeout
         send_mail(
             subject,
             message,
             settings.DEFAULT_FROM_EMAIL,
             [user.email],
-            fail_silently=True,  # Don't crash if email fails
+            fail_silently=True,
+            timeout=5  # 5 second timeout
         )
-        logger.info(f"✅ Email sent successfully to {user.email}")
+        logger.info(f"✅ Email sent to {user.email}")
+        
     except Exception as e:
-        # Log error but don't raise - approval should not fail due to email
-        logger.error(f"❌ Failed to send email to {user.email}: {str(e)}")
+        # Just log error, don't crash
+        logger.error(f"Email error for {user.email}: {str(e)}")
