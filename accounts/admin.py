@@ -1,9 +1,9 @@
 from django.contrib import admin
 from django.contrib import messages
 from .models import EmployerRequest, User, Profile
-from .utils import send_employer_approved_email
+from .utils import send_employer_approved_email_async
 from jobs.models import Company
-
+import threading
 
 admin.site.register(User)
 admin.site.register(Profile)
@@ -35,7 +35,7 @@ class EmployerRequestAdmin(admin.ModelAdmin):
                 )
 
                 if user.email:
-                    send_employer_approved_email(user)
+                    send_employer_approved_email_async(user)
                 else:
                     print(f"No email for {user.username}")
 
