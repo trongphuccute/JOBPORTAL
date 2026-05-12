@@ -34,7 +34,7 @@ JobPortal Team
             message,
             settings.DEFAULT_FROM_EMAIL,
             [user.email],
-            fail_silently=False,
+            fail_silently=True,  # Don't crash if email fails
         )
         logger.info(f"✅ Email sent successfully to {user.email}")
     except Exception as e:
