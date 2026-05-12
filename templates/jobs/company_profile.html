@@ -1,85 +1,101 @@
-{% extends 'base/base.html' %} {% load static %} {% block content %}
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
 
 <section class="company-profile-page">
-  <div class="container py-5">
-    <!-- HERO -->
 
-    <div class="company-hero">
-      <div class="hero-left">
-        <div class="company-logo">{{ company.name|first }}</div>
+  <!-- HERO SECTION -->
+  <div class="company-hero-wrapper">
+    <div class="container">
 
-        <div>
-          <h1>{{ company.name }}</h1>
+      <div class="company-hero-card">
 
-          <div class="company-meta">
-            <span> 📍 {{ company.location }} </span>
+        <!-- LEFT -->
+        <div class="hero-left">
+          <div class="company-logo">
+            {{ company.name|first }}
+          </div>
 
-            {% if company.website %}
-            <span>
-              🌐
-              <a href="{{ company.website }}" target="_blank"> Website </a>
-            </span>
-            {% endif %}
+          <div class="company-info">
+            <h1 class="company-name">{{ company.name }}</h1>
+
+            <div class="company-meta">
+              <span>📍 {{ company.location }}</span>
+
+              {% if company.website %}
+              <span>
+                🌐 
+                <a href="{{ company.website }}" target="_blank">Visit Website</a>
+              </span>
+              {% endif %}
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="hero-right">
-        <div class="job-count">
-          {{ jobs.count }}
-
-          <span> Jobs Posted </span>
+        <!-- RIGHT -->
+        <div class="hero-right">
+          <div class="job-count-box">
+            <div class="job-count-number">{{ jobs.count }}</div>
+            <div class="job-count-label">Open Jobs</div>
+          </div>
         </div>
+
       </div>
+
     </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="container py-5">
 
     <!-- ABOUT -->
+    <div class="section-card">
+      <h3 class="section-title">About Company</h3>
 
-    <div class="company-about">
-      <h3>About Company</h3>
-
-      <p>
-        {% if company.description %} 
-            {{ company.description|linebreaksbr }} 
-        {% else %} 
-            No Company Descriptions here. 
+      <p class="about-text">
+        {% if company.description %}
+          {{ company.description|linebreaksbr }}
+        {% else %}
+          No company description available yet.
         {% endif %}
       </p>
     </div>
 
-    <!-- JOBS -->
+    <!-- JOB LIST -->
+    <div class="section-header">
+      <h2>Open Positions</h2>
+      <span>{{ jobs.count }} jobs available</span>
+    </div>
 
-    <div class="company-jobs">
-      <div class="section-title">
-        <h2>Open Positions</h2>
-      </div>
+    <div class="row g-4">
 
-      <div class="row g-4">
-        {% for job in jobs %}
+      {% for job in jobs %}
+      <div class="col-lg-4 col-md-6">
 
-        <div class="col-lg-4 col-md-6">
-          <div class="company-job-card">
-            <div class="job-top">
-              <span class="job-type"> {{ job.job_type }} </span>
-            </div>
+        <div class="job-card">
 
-            <h4>{{ job.title }}</h4>
-
-            <div class="job-info">
-              <span> 📍 {{ job.location }} </span>
-
-              <span> 💰 {{ job.salary }} </span>
-            </div>
-
-            <a href="{% url 'jobs:job_detail' job.id %}" class="view-job-btn">
-              View Job
-            </a>
+          <div class="job-badge">
+            {{ job.job_type }}
           </div>
+
+          <h4 class="job-title">{{ job.title }}</h4>
+
+          <div class="job-meta">
+            <span>📍 {{ job.location }}</span>
+            <span>💰 {{ job.salary }}</span>
+          </div>
+
+          <a href="{% url 'jobs:job_detail' job.id %}" class="job-btn">
+            View Job →
+          </a>
+
         </div>
 
-        {% endfor %}
       </div>
+      {% endfor %}
+
     </div>
+
   </div>
 </section>
 
