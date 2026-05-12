@@ -1,35 +1,43 @@
-from django.core.mail import send_mail
-from django.conf import settings
-import logging
 import threading
+import logging
+
+from django.conf import settings
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 
 logger = logging.getLogger(__name__)
 
-def send_employer_approved_email_async(user):
-    threading.Thread(target=send_employer_approved_email_async, args=(user,)).start()
-    try:
-        subject = "🎉 Bạn đã trở thành Employer!"
 
+def send_employer_approved_email(user):
+    try:
         site_url = getattr(settings, 'SITE_URL', 'https://jobportal-4z3o.onrender.com')
 
-        message = f"""
+        message = Mail(
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to_emails=user.email,
+            subject="🎉 Bạn đã trở thành Employer!",
+            plain_text_content=f"""
 Xin chào {user.username},
 
-Chúc mừng! Tài khoản của bạn đã được duyệt.
+Tài khoản của bạn đã được duyệt.
 
 Truy cập:
 {site_url}/
 """
-
-        send_mail(
-            subject,
-            message,
-            settings.DEFAULT_FROM_EMAIL,
-            [user.email],
-            fail_silently=False,
         )
 
-        logger.info(f"Email sent to {user.email}")
+        sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
+        response = sg.send(message)
+
+        logger.info(f"SendGrid status: {response.status_code}")
 
     except Exception as e:
-        logger.exception(f"Email error for {user.email}: {e}")
+        logger.exception(f"SendGrid error: {e}")
+
+
+def send_employer_approved_email_async(user):
+    thread = threading.Thread(
+        target=send_employer_approved_email,
+        args=(user,)
+    )
+    thread.start()
