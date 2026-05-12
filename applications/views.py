@@ -69,7 +69,7 @@ def save_job(request, job_id):
     return redirect('jobs:job_detail', id=job.id)
 @login_required
 def applicants_list(request, job_id):
-    job = get_object_or_404(Job, id=job_id, company=request.user)
+    job = get_object_or_404(Job, id=job_id, company__user=request.user)
 
     applications = Application.objects.filter(job=job).select_related('user', 'resume')
 
@@ -78,21 +78,27 @@ def applicants_list(request, job_id):
         'applications': applications
     })
 @login_required
+@employer_required
 def update_application_status(request, app_id, status):
-
-    application = get_object_or_404(Application, id=app_id)
+    # Verify the employer owns this job
+    application = get_object_or_404(Application, id=app_id, job__company__user=request.user)
 
     # update status
-
     if status == 'accepted':
-
         application.status = 'accepted'
-
     elif status == 'rejected':
         application.status = 'rejected'
     else:
         application.status = 'pending'
     application.save()
+    
+    # Send notification to applicant
+    from accounts.models import Notification
+    Notification.objects.create(
+        user=application.user,
+        message=f"Ứng tuyển của bạn vào {application.job.title} đã cập nhật: {application.status}"
+    )
+    
     return redirect('dashboard')
 
 @login_required

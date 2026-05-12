@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # DEBUG
-DEBUG = FALSE
+DEBUG = config('DEBUG', default=False, cast=bool)
 
 # ALLOWED_HOSTS
 ALLOWED_HOSTS = ['*']
@@ -110,10 +110,30 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default=None)
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default=None)
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# Site URL for email templates and links
+SITE_URL = config('SITE_URL', default='https://jobportal-4z3o.onrender.com')
+
+# Logging configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'accounts.utils': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+    },
+}
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

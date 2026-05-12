@@ -4,17 +4,14 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from datetime import timedelta, datetime
 
-from accounts.models import EmployerRequest
-from jobs.models import Job
+from accounts.models import EmployerRequest, Profile
+from jobs.models import Job, Company
 from applications.models import Application, SavedJob
 from django.db.models import Count
 from django.utils.timezone import now
-from datetime import timedelta, datetime
 from .forms import RegisterForm, LoginForm, User
-from jobs.models import Company
-from django.utils.timezone import now
-from .models import Profile
 
 def register(request):
     if request.method == 'POST':
