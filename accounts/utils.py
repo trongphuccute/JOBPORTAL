@@ -28,7 +28,7 @@ Truy cập:
             message,
             settings.EMAIL_HOST_USER,
             [user.email],
-            fail_silently=False,
+            fail_silently=True,
         )
 
         logger.info(f"Email sent to {user.email}")
