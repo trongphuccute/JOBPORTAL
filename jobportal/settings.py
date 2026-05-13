@@ -1,6 +1,7 @@
 from pathlib import Path
 from pickle import FALSE
 from decouple import config
+from datetime import timedelta
 import os
 import dj_database_url
 import cloudinary
@@ -33,6 +34,7 @@ INSTALLED_APPS = [
     'blog',
     'cloudinary',
     'cloudinary_storage',
+    'axes',
 ]
 
 MIDDLEWARE = [
@@ -44,6 +46,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'axes.middleware.AxesMiddleware',
 ]
 
 ROOT_URLCONF = 'jobportal.urls'
@@ -146,3 +149,16 @@ STORAGES = {
         'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
     },
 }
+
+AUTHENTICATION_BACKENDS = [
+    'axes.backends.AxesStandaloneBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+AXES_FAILURE_LIMIT = 5
+
+AXES_COOLOFF_TIME = timedelta(minutes=15)
+
+AXES_LOCKOUT_PARAMETERS = ["ip_address"]
+
+AXES_RESET_ON_SUCCESS = True
