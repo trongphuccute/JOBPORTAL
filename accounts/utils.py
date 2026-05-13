@@ -56,3 +56,44 @@ def send_employer_approved_email_async(user):
         args=(user,)
     )
     thread.start()
+
+def send_verification_email(user, verify_url):
+
+    message = Mail(
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to_emails=user.email,
+        subject='Verify Your Email - JobPortal',
+
+        html_content=f"""
+        <div style="font-family:Arial;padding:20px">
+            <h2>Verify your email</h2>
+
+            <p>
+                Thanks for registering at JobPortal.
+            </p>
+
+            <p>
+                Click the button below to activate your account:
+            </p>
+
+            <a href="{verify_url}"
+               style="
+                    background:#0d6efd;
+                    color:white;
+                    padding:12px 20px;
+                    text-decoration:none;
+                    border-radius:8px;
+                    display:inline-block;
+               ">
+               Verify Email
+            </a>
+
+            <p style="margin-top:20px">
+                If you didn't create this account, ignore this email.
+            </p>
+        </div>
+        """
+    )
+
+    sg = SendGridAPIClient(settings.SENDGRID_API_KEY)
+    sg.send(message)

@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from datetime import timedelta, datetime
 
 from accounts.models import EmployerRequest, Profile
+from accounts.utils import send_verification_email
 from jobs.models import Job, Company
 from applications.models import Application, SavedJob
 from django.db.models import Count
@@ -24,6 +25,7 @@ from django.utils.http import (
 from django.utils.encoding import force_bytes
 
 from .tokens import email_verification_token
+
 
 def register(request):
     if request.method == 'POST':
@@ -52,13 +54,7 @@ def register(request):
         verification_link = request.build_absolute_uri( 
             reverse('verify_email', kwargs={'uidb64': UID, 'token': token})
         )
-        send_mail(
-            subject="Xác thực email cho JobPortal",
-            message=f"Xin chào {user.username},\n\nVui lòng nhấp vào liên kết sau để xác thực email của bạn:\n{verification_link}\n\nNếu bạn không đăng ký tài khoản này, hãy bỏ qua email này.",
-            from_email="DEFAULT_FROM_EMAIL",
-            recipient_list=[user.email],
-            fail_silently=False,
-        )
+        send_verification_email(user, verify_url)
 
         messages.success(request, "Please verify your email before login.")
         return redirect('login')
