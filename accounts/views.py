@@ -454,7 +454,7 @@ def profile(request):
 def verify_email(request, uidb64, token):
 
     try:
-
+        
         uid = urlsafe_base64_decode(
             uidb64
         ).decode()
