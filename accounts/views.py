@@ -49,12 +49,12 @@ def register(request):
             password=password,
             is_active=False
         )
-        UID = urlsafe_base64_encode(force_bytes(user.pk))  
+        uid = urlsafe_base64_encode(force_bytes(user.pk))  
         token = email_verification_token.make_token(user)
         verification_link = request.build_absolute_uri( 
-            reverse('verify_email', kwargs={'uidb64': UID, 'token': token})
+            reverse('verify_email', kwargs={'uidb64': uid, 'token': token})
         )
-        send_verification_email(user, verify_url)
+        send_verification_email(user, verification_link)
 
         messages.success(request, "Please verify your email before login.")
         return redirect('login')
