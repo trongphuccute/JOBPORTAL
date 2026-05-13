@@ -12,6 +12,18 @@ from applications.models import Application, SavedJob
 from django.db.models import Count
 from django.utils.timezone import now
 from .forms import RegisterForm, LoginForm, User
+from django.core.mail import send_mail
+
+from django.urls import reverse
+
+from django.utils.http import (
+    urlsafe_base64_encode,
+    urlsafe_base64_decode
+)
+
+from django.utils.encoding import force_bytes
+
+from .tokens import email_verification_token
 
 def register(request):
     if request.method == 'POST':
@@ -32,27 +44,65 @@ def register(request):
         user = User.objects.create_user(
             username=username,
             email=email,
-            password=password
+            password=password,
+            is_active=False
+        )
+        UID = urlsafe_base64_encode(force_bytes(user.pk))  
+        token = email_verification_token.make_token(user)
+        verification_link = request.build_absolute_uri( 
+            reverse('verify_email', kwargs={'uidb64': UID, 'token': token})
+        )
+        send_mail(
+            subject="Xác thực email cho JobPortal",
+            message=f"Xin chào {user.username},\n\nVui lòng nhấp vào liên kết sau để xác thực email của bạn:\n{verification_link}\n\nNếu bạn không đăng ký tài khoản này, hãy bỏ qua email này.",
+            from_email="DEFAULT_FROM_EMAIL",
+            recipient_list=[user.email],
+            fail_silently=False,
         )
 
-        messages.success(request, "Đăng ký thành công!")
+        messages.success(request, "Please verify your email before login.")
         return redirect('login')
 
     return render(request, 'auth/register.html')
 
 
 def user_login(request):
+
     form = LoginForm(request, data=request.POST or None)
 
     if request.method == "POST":
+
         if form.is_valid():
+
             user = form.get_user()
+
+            # ❌ CHƯA VERIFY EMAIL
+            if not user.is_verified:
+
+                messages.error(
+                    request,
+                    "Please verify your email before login."
+                )
+
+                return redirect('login')
+
+            # ✅ LOGIN
             login(request, user)
-            messages.success(request, "Login successful!")
+
+            messages.success(
+                request,
+                "Login successful!"
+            )
+
             return redirect('/')
 
-    return render(request, "auth/login.html", {"form": form})
-
+    return render(
+        request,
+        "auth/login.html",
+        {
+            "form": form
+        }
+    )
 
 def user_logout(request):
     logout(request)
@@ -404,3 +454,39 @@ def profile(request):
         'profile': profile
 
     })
+
+def verify_email(request, uidb64, token):
+
+    try:
+
+        uid = urlsafe_base64_decode(
+            uidb64
+        ).decode()
+
+        user = User.objects.get(pk=uid)
+
+    except:
+
+        user = None
+
+    if user and email_verification_token.check_token(user, token):
+
+        user.is_active = True
+
+        user.is_verified = True
+
+        user.save()
+
+        messages.success(
+            request,
+            "Email verified successfully!"
+        )
+
+        return redirect('login')
+
+    messages.error(
+        request,
+        "Invalid verification link."
+    )
+
+    return redirect('register')

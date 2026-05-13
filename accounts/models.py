@@ -8,6 +8,7 @@ class User(AbstractUser):
     )
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='job_seeker')
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    is_verified = models.BooleanField(default=False)
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
