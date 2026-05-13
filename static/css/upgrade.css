@@ -8384,3 +8384,144 @@ body{
     border-color:#0d6efd;
     background:#eef5ff;
 }
+/* =========================
+   REGISTER VERIFY UI
+========================= */
+
+.auth-messages{
+    margin-bottom: 20px;
+}
+
+.auth-message{
+    padding: 14px 18px;
+    border-radius: 16px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.1);
+    color: #fff;
+    font-size: 14px;
+    backdrop-filter: blur(10px);
+}
+
+.verify-hint{
+    display: block;
+    margin-top: 10px;
+    color: rgba(255,255,255,.65);
+    font-size: 13px;
+}
+
+.verify-info-box{
+    margin-top: 24px;
+    padding: 20px;
+    border-radius: 24px;
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.08);
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    backdrop-filter: blur(14px);
+}
+
+.verify-icon{
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(
+        135deg,
+        #6c63ff,
+        #8b5cf6
+    );
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.verify-content h5{
+    color: white;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.verify-content p{
+    color: rgba(255,255,255,.7);
+    margin: 0;
+    line-height: 1.7;
+    font-size: 14px;
+}
+/* =========================
+   LOGIN VERIFY UI
+========================= */
+
+.auth-messages{
+    margin-bottom: 20px;
+}
+
+.auth-message{
+    padding: 14px 18px;
+    border-radius: 16px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.1);
+    color: #fff;
+    font-size: 14px;
+    backdrop-filter: blur(10px);
+}
+
+.verify-reminder-box{
+    margin-top: 22px;
+    padding: 18px;
+    border-radius: 22px;
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.08);
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    backdrop-filter: blur(14px);
+}
+
+.verify-reminder-icon{
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: linear-gradient(
+        135deg,
+        #6c63ff,
+        #8b5cf6
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.verify-reminder-content h5{
+    color: white;
+    margin-bottom: 6px;
+    font-weight: 700;
+}
+
+.verify-reminder-content p{
+    margin: 0;
+    color: rgba(255,255,255,.7);
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.resend-verify-text{
+    margin-top: 18px;
+    text-align: center;
+    color: rgba(255,255,255,.65);
+    font-size: 14px;
+}
+
+.resend-verify-text a{
+    color: #8b5cf6;
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 4px;
+}
+
+.resend-verify-text a:hover{
+    color: white;
+}
