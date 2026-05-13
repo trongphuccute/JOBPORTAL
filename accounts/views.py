@@ -55,6 +55,9 @@ def register(request):
             reverse('verify_email', kwargs={'uidb64': uid, 'token': token})
         )
         send_verification_email(user, verification_link)
+        print("REGISTER SUCCESS")
+        print(user.email)
+        print(verification_link)
 
         messages.success(request, "Please verify your email before login.")
         return redirect('login')
