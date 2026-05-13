@@ -8385,143 +8385,137 @@ body{
     background:#eef5ff;
 }
 /* =========================
-   REGISTER VERIFY UI
+   AUTH VERIFY UI FIX
 ========================= */
 
 .auth-messages{
+    width: 100%;
     margin-bottom: 20px;
 }
 
 .auth-message{
+    width: 100%;
     padding: 14px 18px;
     border-radius: 16px;
-    background: rgba(255,255,255,.08);
-    border: 1px solid rgba(255,255,255,.1);
-    color: #fff;
+    background: rgba(108,99,255,.12);
+    border: 1px solid rgba(108,99,255,.2);
+    color: #222;
     font-size: 14px;
-    backdrop-filter: blur(10px);
+    font-weight: 500;
 }
+
+/* EMAIL HINT */
 
 .verify-hint{
     display: block;
     margin-top: 10px;
-    color: rgba(255,255,255,.65);
     font-size: 13px;
+    color: #6c63ff;
+    font-weight: 600;
 }
 
-.verify-info-box{
-    margin-top: 24px;
-    padding: 20px;
-    border-radius: 24px;
-    background: rgba(255,255,255,.05);
-    border: 1px solid rgba(255,255,255,.08);
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    backdrop-filter: blur(14px);
-}
+/* VERIFY BOX */
 
-.verify-icon{
-    width: 52px;
-    height: 52px;
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(
-        135deg,
-        #6c63ff,
-        #8b5cf6
-    );
-    font-size: 22px;
-    flex-shrink: 0;
-}
-
-.verify-content h5{
-    color: white;
-    margin-bottom: 8px;
-    font-weight: 700;
-}
-
-.verify-content p{
-    color: rgba(255,255,255,.7);
-    margin: 0;
-    line-height: 1.7;
-    font-size: 14px;
-}
-/* =========================
-   LOGIN VERIFY UI
-========================= */
-
-.auth-messages{
-    margin-bottom: 20px;
-}
-
-.auth-message{
-    padding: 14px 18px;
-    border-radius: 16px;
-    background: rgba(255,255,255,.08);
-    border: 1px solid rgba(255,255,255,.1);
-    color: #fff;
-    font-size: 14px;
-    backdrop-filter: blur(10px);
-}
-
+.verify-info-box,
 .verify-reminder-box{
+    width: 100%;
     margin-top: 22px;
     padding: 18px;
     border-radius: 22px;
-    background: rgba(255,255,255,.05);
-    border: 1px solid rgba(255,255,255,.08);
+    background: #f8f9ff;
+    border: 1px solid #ebe9ff;
+
     display: flex;
-    gap: 14px;
     align-items: flex-start;
-    backdrop-filter: blur(14px);
+    gap: 14px;
+
+    box-sizing: border-box;
 }
 
+/* ICON */
+
+.verify-icon,
 .verify-reminder-icon{
     width: 48px;
     height: 48px;
+    min-width: 48px;
+
     border-radius: 14px;
+
     background: linear-gradient(
         135deg,
         #6c63ff,
         #8b5cf6
     );
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     font-size: 20px;
-    flex-shrink: 0;
-}
-
-.verify-reminder-content h5{
     color: white;
-    margin-bottom: 6px;
-    font-weight: 700;
 }
 
+/* CONTENT */
+
+.verify-content,
+.verify-reminder-content{
+    flex: 1;
+}
+
+.verify-content h5,
+.verify-reminder-content h5{
+    margin-bottom: 6px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.verify-content p,
 .verify-reminder-content p{
     margin: 0;
-    color: rgba(255,255,255,.7);
-    line-height: 1.6;
     font-size: 14px;
+    line-height: 1.7;
+    color: #6b7280;
 }
+
+/* RESEND */
 
 .resend-verify-text{
     margin-top: 18px;
     text-align: center;
-    color: rgba(255,255,255,.65);
     font-size: 14px;
+    color: #6b7280;
 }
 
 .resend-verify-text a{
-    color: #8b5cf6;
+    color: #6c63ff;
     text-decoration: none;
-    font-weight: 600;
-    margin-left: 4px;
+    font-weight: 700;
 }
 
 .resend-verify-text a:hover{
-    color: white;
+    color: #4f46e5;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .verify-info-box,
+    .verify-reminder-box{
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .verify-content h5,
+    .verify-reminder-content h5{
+        font-size: 15px;
+    }
+
+    .verify-content p,
+    .verify-reminder-content p{
+        font-size: 13px;
+    }
+
 }
