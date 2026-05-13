@@ -464,7 +464,7 @@ def verify_email(request, uidb64, token):
 
         user = User.objects.get(pk=uid)
 
-    except:
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
 
         user = None
 
