@@ -12,7 +12,7 @@ genai.configure(api_key=settings.GEMINI_API_KEY)
 for m in genai.list_models():
     print(m.name)
 
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("gemini-2.5-flash")
 
 
 @login_required
