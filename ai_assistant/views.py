@@ -9,8 +9,10 @@ from django.views.decorators.http import require_POST
 
 
 genai.configure(api_key=settings.GEMINI_API_KEY)
+for m in genai.list_models():
+    print(m.name)
 
-model = genai.GenerativeModel("gemini-pro")
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 
 @login_required
