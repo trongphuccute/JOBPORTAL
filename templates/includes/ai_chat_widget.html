@@ -1,0 +1,143 @@
+{% if request.user.is_authenticated and '/admin/' not in request.path %}
+
+<div class="ai-chat-wrapper">
+
+    <button id="ai-chat-toggle">
+        🤖
+    </button>
+
+    <div id="ai-chat-box" class="hidden">
+
+        <div class="ai-chat-header">
+            Gemini Career Assistant
+        </div>
+
+        <div id="ai-chat-messages"></div>
+
+        <div class="ai-chat-input-area">
+
+            <input
+                type="text"
+                id="ai-chat-input"
+                placeholder="Ask AI anything..."
+            >
+
+            <button id="ai-send-btn">
+                Send
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+const toggleBtn = document.getElementById("ai-chat-toggle");
+const chatBox = document.getElementById("ai-chat-box");
+const sendBtn = document.getElementById("ai-send-btn");
+const input = document.getElementById("ai-chat-input");
+const messages = document.getElementById("ai-chat-messages");
+
+
+// OPEN / CLOSE
+
+toggleBtn.addEventListener("click", () => {
+
+    chatBox.classList.toggle("hidden");
+
+});
+
+
+// SEND MESSAGE
+
+async function sendMessage() {
+
+    let text = input.value.trim();
+
+    if (!text) return;
+
+
+    // USER MESSAGE
+
+    messages.innerHTML += `
+        <div class="user-msg">
+            ${text}
+        </div>
+    `;
+
+    input.value = "";
+
+
+    // TYPING
+
+    messages.innerHTML += `
+        <div class="ai-msg typing" id="typing-msg">
+            Gemini is typing...
+        </div>
+    `;
+
+    messages.scrollTop = messages.scrollHeight;
+
+
+    try {
+
+        const response = await fetch('/ai/chat/', {
+
+            method: 'POST',
+
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+
+            body: JSON.stringify({
+                message: text
+            })
+        });
+
+        const data = await response.json();
+
+        document.getElementById("typing-msg").remove();
+
+
+        messages.innerHTML += `
+            <div class="ai-msg">
+                ${data.response}
+            </div>
+        `;
+
+        messages.scrollTop = messages.scrollHeight;
+
+    }
+
+    catch (error) {
+
+        document.getElementById("typing-msg").remove();
+
+        messages.innerHTML += `
+            <div class="ai-msg">
+                Error connecting to AI.
+            </div>
+        `;
+    }
+}
+
+
+sendBtn.addEventListener("click", sendMessage);
+
+
+input.addEventListener("keypress", function(e) {
+
+    if (e.key === 'Enter') {
+
+        sendMessage();
+
+    }
+
+});
+
+</script>
+
+{% endif %}

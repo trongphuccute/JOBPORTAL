@@ -31,6 +31,7 @@ urlpatterns = [
     path('applications/', include('applications.urls')),
     path('blog/', include('blog.urls')),
     path('my-jobs/', my_jobs, name='my_jobs'),
+    path('ai/', include('ai_assistant.urls')),
     
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

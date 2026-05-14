@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'cloudinary',
     'cloudinary_storage',
     'axes',
+    'ai_assistant',
 ]
 
 MIDDLEWARE = [
@@ -162,3 +163,5 @@ AXES_COOLOFF_TIME = timedelta(minutes=15)
 AXES_LOCKOUT_PARAMETERS = ["ip_address"]
 
 AXES_RESET_ON_SUCCESS = True
+
+GEMINI_API_KEY = config('GEMINI_API_KEY')
