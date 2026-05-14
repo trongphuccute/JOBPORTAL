@@ -258,13 +258,13 @@ darkBtn.addEventListener("click", () => {
 
         localStorage.setItem("darkMode","enabled");
 
-        darkBtn.innerHTML = "☀️";
+        darkBtn.innerHTML = "<img src='{% static 'img/sun_icon.png' %}' alt='Light Mode' width='30'>";
 
     }else{
 
         localStorage.setItem("darkMode","disabled");
 
-        darkBtn.innerHTML = "🌙";
+        darkBtn.innerHTML = "<img src='{% static 'img/moon_icon.png' %}' alt='Dark Mode' width='30'>";
     }
 
 });
