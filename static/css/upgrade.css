@@ -8581,7 +8581,7 @@ body{
 
 #ai-chat-box{
     position: absolute;
-    bottom: 85px;
+    bottom: 72px;
     right: 0;
 
     width: 370px;
@@ -8844,7 +8844,7 @@ body{
         height: 75vh;
 
         right: -6px;
-        bottom: 80px;
+        bottom: 0px;
     }
 
     .ai-chat-wrapper{
