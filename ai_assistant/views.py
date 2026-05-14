@@ -10,7 +10,7 @@ from django.views.decorators.http import require_POST
 
 genai.configure(api_key=settings.GEMINI_API_KEY)
 
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel("gemini-1.5-flash")
 
 
 @login_required
@@ -21,32 +21,18 @@ def ai_chat(request):
 
         data = json.loads(request.body)
 
-        user_message = data.get('message')
+        message = data.get("message")
 
-        prompt = f"""
-        You are an AI career assistant for JobPortal.
-
-        Help users with:
-        - career advice
-        - CV tips
-        - interview preparation
-        - programming learning roadmap
-        - job recommendations
-
-        Keep answers concise and professional.
-
-        User message:
-        {user_message}
-        """
-
-        response = model.generate_content(prompt)
+        response = model.generate_content(message)
 
         return JsonResponse({
-            'response': response.text
+            "response": response.text
         })
 
     except Exception as e:
 
+        print("GEMINI ERROR:", e)
+
         return JsonResponse({
-            'error': str(e)
+            "error": str(e)
         }, status=500)
