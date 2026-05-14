@@ -241,33 +241,33 @@ window.addEventListener("scroll", () => {
   });
 });
 
-const darkBtn = document.getElementById("darkModeToggle");
+// const darkBtn = document.getElementById("darkModeToggle");
 
-if(localStorage.getItem("darkMode") === "enabled"){
+// if(localStorage.getItem("darkMode") === "enabled"){
 
-    document.body.classList.add("dark-mode");
+//     document.body.classList.add("dark-mode");
 
-    darkBtn.innerHTML = "☀️";
-}
+//     darkBtn.innerHTML = "☀️";
+// }
 
-darkBtn.addEventListener("click", () => {
+// darkBtn.addEventListener("click", () => {
 
-    document.body.classList.toggle("dark-mode");
+//     document.body.classList.toggle("dark-mode");
 
-    if(document.body.classList.contains("dark-mode")){
+//     if(document.body.classList.contains("dark-mode")){
 
-        localStorage.setItem("darkMode","enabled");
+//         localStorage.setItem("darkMode","enabled");
 
-        darkBtn.innerHTML = "<img src='{% static 'img/sun_icon.png' %}' alt='Light Mode' width='30'>";
+//         darkBtn.innerHTML = "<img src='{% static 'img/sun_icon.png' %}' alt='Light Mode' width='30'>";
 
-    }else{
+//     }else{
 
-        localStorage.setItem("darkMode","disabled");
+//         localStorage.setItem("darkMode","disabled");
 
-        darkBtn.innerHTML = "<img src='{% static 'img/moon_icon.png' %}' alt='Dark Mode' width='30'>";
-    }
+//         darkBtn.innerHTML = "<img src='{% static 'img/moon_icon.png' %}' alt='Dark Mode' width='30'>";
+//     }
 
-});
+// });
 /* ================= BLOG FORM ================= */
 function previewImage(file) {
 
