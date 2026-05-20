@@ -1,0 +1,34 @@
+{% load i18n %}
+
+<div class="actions flex items-center gap-2 py-2">
+
+    {% block actions %}
+
+        <label>
+            {% translate "Action:" %}
+        </label>
+
+        <select name="action" required>
+
+            <option value="" selected>
+                ---------
+            </option>
+
+            {% for choice in action_form.action.field.choices %}
+                <option value="{{ choice.0 }}">
+                    {{ choice.1 }}
+                </option>
+            {% endfor %}
+
+        </select>
+
+        <button type="submit"
+                class="bg-blue-600 text-white px-4 py-2 rounded">
+
+            Go
+
+        </button>
+
+    {% endblock %}
+
+</div>
