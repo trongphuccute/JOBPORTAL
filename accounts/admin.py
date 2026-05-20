@@ -16,6 +16,10 @@ class EmployerRequestAdmin(admin.ModelAdmin):
     list_display = ('user', 'company_name', 'status')
 
     actions = ['approve']
+    actions_on_top = True
+    actions_on_bottom = True
+
+    actions_submit_line = True
 
     def approve(self, request, queryset):
 
