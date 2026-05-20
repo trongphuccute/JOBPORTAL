@@ -28,9 +28,7 @@ def custom_index(request, extra_context=None):
     )
 
     extra_context["total_employers"] = (
-        User.objects.filter(
-            is_employer=True
-        ).count()
+        User.objects.filter(role="employer").count()
     )
 
     return original_index(
