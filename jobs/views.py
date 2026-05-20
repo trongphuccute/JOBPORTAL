@@ -60,13 +60,19 @@ def create_job(request):
         job_type = request.POST.get("job_type")
         salary = request.POST.get("salary")
 
-        #🔥 MULTIPLE IMAGES
+        # 🔥 MULTIPLE IMAGES
         images = request.FILES.getlist("images")
 
-        # 🔥 MAIN IMAGE (nếu bạn có field image)
-        main_image = images[0] if images else None
+        # 🔥 FILTER EMPTY FILES
+        valid_images = []
 
-    
+        for img in images:
+            if img and hasattr(img, "size") and img.size > 0:
+                valid_images.append(img)
+
+        # 🔥 MAIN IMAGE
+        main_image = valid_images[0] if valid_images else None
+
         # 🔥 COMPANY
         company = Company.objects.filter(user=request.user).first()
 
@@ -87,9 +93,11 @@ def create_job(request):
         )
 
         # ✅ SAVE GALLERY IMAGES
-        if images:
-            for img in images:
+        for img in valid_images:
+            try:
                 JobImage.objects.create(job=job, image=img)
+            except Exception as e:
+                print("UPLOAD ERROR:", e)
 
         return redirect("jobs:job_list")
 
