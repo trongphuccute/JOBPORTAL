@@ -1,10 +1,9 @@
 from django.contrib import admin
 from django.contrib import messages
-
 from .models import EmployerRequest, User, Profile
 from .utils import send_employer_approved_email_async
-
 from jobs.models import Company
+import threading
 
 
 admin.site.register(User)
@@ -14,23 +13,11 @@ admin.site.register(Profile)
 @admin.register(EmployerRequest)
 class EmployerRequestAdmin(admin.ModelAdmin):
 
-    list_display = (
-        'user',
-        'company_name',
-        'status',
-    )
+    list_display = ('user', 'company_name', 'status')
 
-    list_filter = (
-        'status',
-    )
+    actions = ['approve']
 
-    actions = [
-        'approve_employers'
-    ]
-
-    def approve_employers(self, request, queryset):
-
-        approved_count = 0
+    def approve(self, request, queryset):
 
         for req in queryset:
 
@@ -40,7 +27,6 @@ class EmployerRequestAdmin(admin.ModelAdmin):
                 req.save()
 
                 user = req.user
-
                 user.role = 'employer'
                 user.save()
 
@@ -57,18 +43,19 @@ class EmployerRequestAdmin(admin.ModelAdmin):
                 if user.email:
                     send_employer_approved_email_async(user)
 
-                approved_count += 1
+                else:
+                    print(f"No email for {user.username}")
 
             except Exception as e:
 
-                print("APPROVE ERROR:", e)
+                import logging
 
-        self.message_user(
+                logger = logging.getLogger(__name__)
+                logger.error(f"Approve error: {str(e)}")
+
+        messages.success(
             request,
-            f"{approved_count} employer(s) approved successfully.",
-            messages.SUCCESS
+            f"✅ {queryset.count()} employer(s) approved successfully!"
         )
 
-    approve_employers.short_description = (
-        "✅ Approve selected employers"
-    )
+    approve.short_description = "✅ Approve selected employers"
