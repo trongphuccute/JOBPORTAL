@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import BlogPost, Comment, Like
+from jobportal.admin_site import admin_site
 
 
 @admin.register(BlogPost)

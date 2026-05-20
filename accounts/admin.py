@@ -4,9 +4,10 @@ from .models import EmployerRequest, User, Profile
 from .utils import send_employer_approved_email_async
 from jobs.models import Company
 import threading
+from jobportal.admin_site import admin_site
 
-admin.site.register(User)
-admin.site.register(Profile)
+admin_site.register(User)
+admin_site.register(Profile)
 
 
 @admin.register(EmployerRequest)
