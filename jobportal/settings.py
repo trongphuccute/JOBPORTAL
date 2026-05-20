@@ -21,6 +21,7 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
+    "unfold",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -165,3 +166,13 @@ AXES_LOCKOUT_PARAMETERS = ["ip_address"]
 AXES_RESET_ON_SUCCESS = True
 
 GEMINI_API_KEY = config('GEMINI_API_KEY')
+
+UNFOLD = {
+
+    "SITE_TITLE": "Job Portal Admin",
+
+    "SITE_HEADER": "Job Portal",
+
+    "SITE_SYMBOL": "work",
+
+}
