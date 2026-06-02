@@ -1716,7 +1716,7 @@ body {
 .modern-job-card:hover {
   transform: translateY(-6px);
 
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 16px 40px rgba(44, 160, 85, 0.921);
 
   border-color: #e2e8f0;
 }
