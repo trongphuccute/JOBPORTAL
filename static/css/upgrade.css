@@ -650,11 +650,13 @@ body {
 
   line-height: 1.2;
 
-  max-height: 3em;
+  max-width: 100%;
 
   overflow: hidden;
 
   text-overflow: ellipsis;
+
+  white-space: nowrap;
 }
 
 .company-name {
